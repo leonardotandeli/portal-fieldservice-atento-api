@@ -24,6 +24,12 @@ type Usuario struct {
 	Site               Site
 }
 
+// Struct Senha representa o formato da requisição de alteração de senha
+type Senha struct {
+	Nova  string `json:"nova"`
+	Atual string `json:"atual"`
+}
+
 // Preparar vai chamar os métodos para validar e formatar o usuário recebido
 //func (usuario *Usuario) Preparar(etapa string) error {
 //	if erro := usuario.validar(etapa); erro != nil {
