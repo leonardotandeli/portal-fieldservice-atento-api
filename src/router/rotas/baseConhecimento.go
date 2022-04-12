@@ -6,7 +6,7 @@ import (
 )
 
 // Define todas as rotas da base de conhecimento
-var rotasBDC = []Rota{
+var rotasBaseConhecimento = []Rota{
 	{
 		URI:                "/base",
 		Metodo:             http.MethodPost,

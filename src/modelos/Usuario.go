@@ -6,22 +6,29 @@ import (
 
 // Usuario representa um usuário cadastrado no sistema
 type Usuario struct {
-	IDUSUARIO          uint64    `json:"idusuario,omitempty"`
-	NOME               string    `json:"nome,omitempty"`
-	LOGIN_NT           string    `json:"login_nt,omitempty"`
-	RE                 string    `json:"re,omitempty"`
-	CARGO              string    `json:"cargo,omitempty"`
-	EMAIL              string    `json:"email,omitempty"`
-	SENHA              string    `json:"senha,omitempty"`
-	V_USUARIOS         string    `json:"v_usuarios,omitempty"`
-	V_BDC_POSTS        string    `json:"v_bdc_posts,omitempty"`
-	V_BDC_ADM          string    `json:"v_bdc_adm,omitempty"`
-	V_IMDB             string    `json:"v_imdb,omitempty"`
-	V_GSA              string    `json:"v_gsa,omitempty"`
-	V_MAPA_OPERACIONAL string    `json:"v_mapa_operacional,omitempty"`
-	ID_SITE            string    `json:"id_site,omitempty"`
-	DATA_CRIACAO       time.Time `json:"data_criacao,omitempty"`
-	Site               Site
+	IDUSUARIO              uint64    `json:"idusuario,omitempty"`
+	NOME                   string    `json:"nome,omitempty"`
+	LOGIN_NT               string    `json:"login_nt,omitempty"`
+	RE                     string    `json:"re,omitempty"`
+	CARGO                  string    `json:"cargo,omitempty"`
+	EMAIL                  string    `json:"email,omitempty"`
+	SENHA                  string    `json:"senha,omitempty"`
+	V_USUARIOS             string    `json:"v_usuarios,omitempty"`
+	V_BDC_POSTS            string    `json:"v_bdc_posts,omitempty"`
+	V_BDC_ADM              string    `json:"v_bdc_adm,omitempty"`
+	V_IMDB                 string    `json:"v_imdb,omitempty"`
+	V_GSA                  string    `json:"v_gsa,omitempty"`
+	V_MAPA_OPERACIONAL     string    `json:"v_mapa_operacional,omitempty"`
+	V_MAPA_OPERACIONAL_ADM string    `json:"v_mapa_operacional_adm,omitempty"`
+	ID_SITE                string    `json:"id_site,omitempty"`
+	DATA_CRIACAO           time.Time `json:"data_criacao,omitempty"`
+	Site                   Site
+}
+
+// Struct Senha representa o formato da requisição de alteração de senha
+type Senha struct {
+	Nova  string `json:"nova"`
+	Atual string `json:"atual"`
 }
 
 // Preparar vai chamar os métodos para validar e formatar o usuário recebido
