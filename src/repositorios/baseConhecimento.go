@@ -266,3 +266,53 @@ func (repositorio Posts) BuscarCategoria() ([]modelos.Post_Categoria, error) {
 	return Categoria, nil
 
 }
+
+// BuscarPorID busca um chamado do banco de dados pelo id
+func (repositorio Posts) BuscarCategoriaPorID(ID uint64) (modelos.Post_Categoria, error) {
+
+	linhas, erro := repositorio.db.Query(
+		"SELECT IDCATEGORIA, NOME FROM BDC_CATEGORIAS WHERE IDCATEGORIA = ?", ID)
+	if erro != nil {
+		return modelos.Post_Categoria{}, erro
+	}
+	defer linhas.Close()
+
+	var categoria modelos.Post_Categoria
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&categoria.IDCATEGORIA,
+			&categoria.NOME,
+		); erro != nil {
+			return modelos.Post_Categoria{}, erro
+		}
+	}
+
+	return categoria, nil
+
+}
+
+// BuscarPorID busca um chamado do banco de dados pelo id
+func (repositorio Posts) BuscarClientePorID(ID uint64) (modelos.Cliente, error) {
+
+	linhas, erro := repositorio.db.Query(
+		"SELECT IDCLIENTE, NOME FROM CLIENTES WHERE IDCLIENTE = ?", ID)
+	if erro != nil {
+		return modelos.Cliente{}, erro
+	}
+	defer linhas.Close()
+
+	var cliente modelos.Cliente
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&cliente.IDCLIENTE,
+			&cliente.NOME,
+		); erro != nil {
+			return modelos.Cliente{}, erro
+		}
+	}
+
+	return cliente, nil
+
+}

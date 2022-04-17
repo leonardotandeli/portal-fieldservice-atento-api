@@ -203,3 +203,57 @@ func BuscarDadosCategorias(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusOK, categoria)
 
 }
+
+// BuscarCategoria traz uma categoria armazenadas no banco de dados através do ID.
+func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	ID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePosts(db)
+	categoria, erro := repositorio.BuscarCategoriaPorID(ID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, categoria)
+
+}
+
+// BuscarCliente traz uma categoria armazenadas no banco de dados através do ID.
+func BuscarCliente(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	ID, erro := strconv.ParseUint(parametros["clienteId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePosts(db)
+	cliente, erro := repositorio.BuscarClientePorID(ID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, cliente)
+
+}
