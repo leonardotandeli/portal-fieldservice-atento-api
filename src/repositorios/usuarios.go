@@ -47,7 +47,7 @@ func (repositorio Usuarios) Buscar(nomeOuLogin string) ([]modelos.Usuario, error
 	nomeOuLogin = fmt.Sprintf("%%%s%%", nomeOuLogin)
 
 	linhas, erro := repositorio.db.Query(
-		"SELECT U.IDUSUARIO, U.NOME, U.LOGIN_NT, U.CARGO, U.EMAIL, U.SENHA, U.V_USUARIOS, U.V_BDC_POSTS, U.V_BDC_ADM, U.V_IMDB, U.V_GSA, U.V_MAPA_OPERACIONAL, U.V_MAPA_OPERACIONAL_ADM, U.ID_SITE, S.IDSITE, S.NOME FROM USUARIOS U INNER JOIN SITES S ON S.IDSITE = U.ID_SITE WHERE U.NOME LIKE ? or U.LOGIN_NT LIKE ?", nomeOuLogin, nomeOuLogin)
+		"SELECT U.IDUSUARIO, U.NOME, U.RE, U.LOGIN_NT, U.CARGO, U.EMAIL, U.SENHA, U.V_USUARIOS, U.V_BDC_POSTS, U.V_BDC_ADM, U.V_IMDB, U.V_GSA, U.V_MAPA_OPERACIONAL, U.V_MAPA_OPERACIONAL_ADM, U.ID_SITE, S.IDSITE, S.NOME FROM USUARIOS U INNER JOIN SITES S ON S.IDSITE = U.ID_SITE WHERE U.NOME LIKE ? or U.LOGIN_NT LIKE ?", nomeOuLogin, nomeOuLogin)
 
 	if erro != nil {
 		return nil, erro
@@ -62,6 +62,7 @@ func (repositorio Usuarios) Buscar(nomeOuLogin string) ([]modelos.Usuario, error
 		if erro = linhas.Scan(
 			&usuario.IDUSUARIO,
 			&usuario.NOME,
+			&usuario.RE,
 			&usuario.LOGIN_NT,
 			&usuario.CARGO,
 			&usuario.EMAIL,
