@@ -23,4 +23,5 @@ type Post struct {
 	Usuario      Usuario
 	Categoria    Post_Categoria
 	Site         Site
+	Cliente      Cliente
 }
