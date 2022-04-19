@@ -49,4 +49,34 @@ var rotasBaseConhecimento = []Rota{
 		Funcao:             controllers.BuscarDadosCategorias,
 		RequerAutenticacao: true,
 	},
+	{
+		URI:                "/categorias/{catId}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarCategoria,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/categorias/{catId}",
+		Metodo:             http.MethodPut,
+		Funcao:             controllers.AtualizarCategoria,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/categorias/{catId}",
+		Metodo:             http.MethodDelete,
+		Funcao:             controllers.DeletarCategoria,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/categorias",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.CriarCategoriaBase,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/clientes/{clienteId}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarCliente,
+		RequerAutenticacao: true,
+	},
 }

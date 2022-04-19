@@ -43,7 +43,7 @@ func (repositorio Posts) Criar(post modelos.Post) (uint64, error) {
 func (repositorio Posts) BuscarPorID(ID uint64) (modelos.Post, error) {
 
 	linhas, erro := repositorio.db.Query(
-		"SELECT P.IDPOST, P.TITULO, P.CONTEUDO, P.ID_CATEGORIA, P.ID_USUARIO, P.ID_SITE, P.ID_CLIENTE, C.NOME, U.NOME, S.NOME, P.DATA_CRIACAO FROM BDC_POSTS P INNER JOIN BDC_CATEGORIAS C ON P.ID_CATEGORIA = C.IDCATEGORIA INNER JOIN USUARIOS U ON P.ID_USUARIO = U.IDUSUARIO INNER JOIN SITES S ON P.ID_SITE = S.IDSITE INNER JOIN CLIENTES B ON P.ID_CLIENTE = B.IDCLIENTE WHERE P.IDPOST = ?", ID)
+		"SELECT P.IDPOST, P.TITULO, P.CONTEUDO, P.ID_CATEGORIA, P.ID_USUARIO, P.ID_SITE, P.ID_CLIENTE, C.IDCATEGORIA, C.NOME, U.NOME, S.NOME, B.IDCLIENTE, B.NOME, P.DATA_CRIACAO FROM BDC_POSTS P INNER JOIN BDC_CATEGORIAS C ON P.ID_CATEGORIA = C.IDCATEGORIA INNER JOIN USUARIOS U ON P.ID_USUARIO = U.IDUSUARIO INNER JOIN SITES S ON P.ID_SITE = S.IDSITE INNER JOIN CLIENTES B ON P.ID_CLIENTE = B.IDCLIENTE WHERE P.IDPOST = ?", ID)
 	if erro != nil {
 		return modelos.Post{}, erro
 	}
@@ -60,9 +60,12 @@ func (repositorio Posts) BuscarPorID(ID uint64) (modelos.Post, error) {
 			&post.ID_USUARIO,
 			&post.ID_SITE,
 			&post.ID_CLIENTE,
+			&post.Categoria.IDCATEGORIA,
 			&post.Categoria.NOME,
 			&post.Usuario.NOME,
 			&post.Site.NOME,
+			&post.Cliente.IDCLIENTE,
+			&post.Cliente.NOME,
 			&post.DATA_CRIACAO,
 		); erro != nil {
 			return modelos.Post{}, erro
@@ -124,7 +127,7 @@ func (repositorio Posts) BuscarTodos(urlCategoria string, urlCliente string) ([]
 	fmt.Println(urlCliente)
 
 	linhas, erro := repositorio.db.Query(
-		"SELECT P.IDPOST, P.TITULO, P.CONTEUDO, P.ID_CATEGORIA, P.ID_USUARIO, P.ID_SITE, P.ID_CLIENTE, C.NOME, U.NOME, S.NOME, P.DATA_CRIACAO FROM BDC_POSTS P INNER JOIN BDC_CATEGORIAS C ON P.ID_CATEGORIA = C.IDCATEGORIA INNER JOIN USUARIOS U ON P.ID_USUARIO = U.IDUSUARIO INNER JOIN SITES S ON P.ID_SITE = S.IDSITE INNER JOIN CLIENTES B ON P.ID_CLIENTE = B.IDCLIENTE INNER JOIN BDC_CATEGORIAS N ON P.ID_CATEGORIA = N.IDCATEGORIA ORDER BY P.IDPOST DESC",
+		"SELECT P.IDPOST, P.TITULO, P.CONTEUDO, P.ID_CATEGORIA, P.ID_USUARIO, P.ID_SITE, P.ID_CLIENTE, C.NOME, U.NOME, S.NOME, B.IDCLIENTE, B.NOME, P.DATA_CRIACAO FROM BDC_POSTS P INNER JOIN BDC_CATEGORIAS C ON P.ID_CATEGORIA = C.IDCATEGORIA INNER JOIN USUARIOS U ON P.ID_USUARIO = U.IDUSUARIO INNER JOIN SITES S ON P.ID_SITE = S.IDSITE INNER JOIN CLIENTES B ON P.ID_CLIENTE = B.IDCLIENTE INNER JOIN BDC_CATEGORIAS N ON P.ID_CATEGORIA = N.IDCATEGORIA ORDER BY P.IDPOST DESC",
 	)
 
 	if erro != nil {
@@ -148,6 +151,8 @@ func (repositorio Posts) BuscarTodos(urlCategoria string, urlCliente string) ([]
 			&post.Categoria.NOME,
 			&post.Usuario.NOME,
 			&post.Site.NOME,
+			&post.Cliente.IDCLIENTE,
+			&post.Cliente.NOME,
 			&post.DATA_CRIACAO,
 		); erro != nil {
 			return nil, erro
@@ -265,4 +270,107 @@ func (repositorio Posts) BuscarCategoria() ([]modelos.Post_Categoria, error) {
 
 	return Categoria, nil
 
+}
+
+// BuscarPorID busca um chamado do banco de dados pelo id
+func (repositorio Posts) BuscarCategoriaPorID(ID uint64) (modelos.Post_Categoria, error) {
+
+	linhas, erro := repositorio.db.Query(
+		"SELECT IDCATEGORIA, NOME FROM BDC_CATEGORIAS WHERE IDCATEGORIA = ?", ID)
+	if erro != nil {
+		return modelos.Post_Categoria{}, erro
+	}
+	defer linhas.Close()
+
+	var categoria modelos.Post_Categoria
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&categoria.IDCATEGORIA,
+			&categoria.NOME,
+		); erro != nil {
+			return modelos.Post_Categoria{}, erro
+		}
+	}
+
+	return categoria, nil
+
+}
+
+// Atualizar altera os dados de uma categoria no banco de dados
+func (repositorio Posts) AtualizarCategoria(catID uint64, cat modelos.Post_Categoria) error {
+	statement, erro := repositorio.db.Prepare("UPDATE BDC_CATEGORIAS SET NOME = ? WHERE IDCATEGORIA = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(cat.NOME, catID); erro != nil {
+		return erro
+	}
+
+	return nil
+}
+
+// Deletar exclui uma Categoria do banco de dados
+func (repositorio Posts) DeletarCategoria(catID uint64) error {
+	statement, erro := repositorio.db.Prepare("DELETE FROM BDC_CATEGORIAS WHERE IDPOST = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(catID); erro != nil {
+		return erro
+	}
+
+	return nil
+}
+
+// BuscarPorID busca um chamado do banco de dados pelo id
+func (repositorio Posts) BuscarClientePorID(ID uint64) (modelos.Cliente, error) {
+
+	linhas, erro := repositorio.db.Query(
+		"SELECT IDCLIENTE, NOME FROM CLIENTES WHERE IDCLIENTE = ?", ID)
+	if erro != nil {
+		return modelos.Cliente{}, erro
+	}
+	defer linhas.Close()
+
+	var cliente modelos.Cliente
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&cliente.IDCLIENTE,
+			&cliente.NOME,
+		); erro != nil {
+			return modelos.Cliente{}, erro
+		}
+	}
+
+	return cliente, nil
+
+}
+
+// Criar insere uma publicação no banco de dados
+func (repositorio Posts) CriarCategoria(cat modelos.Post_Categoria) (uint64, error) {
+	statement, erro := repositorio.db.Prepare(
+		"INSERT INTO BDC_CATEGORIAS(NOME) VALUES (?)",
+	)
+	if erro != nil {
+		return 0, erro
+	}
+	defer statement.Close()
+
+	resultado, erro := statement.Exec(cat.NOME)
+	if erro != nil {
+		return 0, erro
+	}
+
+	ultimoIDInserido, erro := resultado.LastInsertId()
+	if erro != nil {
+		return 0, erro
+	}
+
+	return uint64(ultimoIDInserido), nil
 }
