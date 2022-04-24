@@ -20,6 +20,7 @@ type Dac struct {
 type Cliente struct {
 	IDCLIENTE uint64 `json:"idcliente,omitempty"`
 	NOME      string `json:"nome,omitempty"`
+	LOGO_URL  string `json:"logo_url,omitempty"`
 }
 
 // Site representa os sites cadastrados no sistema
