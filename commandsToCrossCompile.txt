@@ -1,0 +1,4 @@
+//Linux
+$Env:GOOS = "linux"; $Env:GOARCH = "amd64"; go build -o api
+//Windows
+$Env:GOOS = "windows"; $Env:GOARCH = "amd64"; go build api
