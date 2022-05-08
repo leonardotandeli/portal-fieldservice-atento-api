@@ -117,6 +117,30 @@ func BuscarPostsPorString(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// BuscarPosts traz as publicações
+func BuscarPostsPorStringCat(w http.ResponseWriter, r *http.Request) {
+
+	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
+	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePosts(db)
+	posts, erro := repositorio.BuscarPorStringCat(urlCategoria, urlCliente)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, posts)
+
+}
+
 // BuscarPost traz uma única publicação
 func BuscarPost(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)

@@ -251,6 +251,52 @@ func (repositorio Posts) BuscarPorString(urlCategoria string, urlCliente string)
 
 }
 
+// Buscar traz todas as publicações
+func (repositorio Posts) BuscarPorStringCat(urlCategoria string, urlCliente string) ([]modelos.Post, error) {
+
+	urlCategoria = fmt.Sprintf("%s", urlCategoria) // filtra por parametro na url ?categoria=[id]
+	fmt.Println(urlCategoria)
+	urlCliente = fmt.Sprintf("%s", urlCliente) // filtra por parametro na url ?cliente=[id]
+	fmt.Println(urlCliente)
+
+	linhas, erro := repositorio.db.Query(
+		"SELECT P.IDPOST, P.TITULO, P.CONTEUDO, P.ID_CATEGORIA, P.ID_USUARIO, P.ID_SITE, P.ID_CLIENTE, C.NOME, U.NOME, S.NOME, P.DATA_CRIACAO FROM BDC_POSTS P INNER JOIN BDC_CATEGORIAS C ON P.ID_CATEGORIA = C.IDCATEGORIA INNER JOIN USUARIOS U ON P.ID_USUARIO = U.IDUSUARIO INNER JOIN SITES S ON P.ID_SITE = S.IDSITE INNER JOIN CLIENTES B ON P.ID_CLIENTE = B.IDCLIENTE INNER JOIN BDC_CATEGORIAS N ON P.ID_CATEGORIA = N.IDCATEGORIA WHERE N.IDCATEGORIA = ? AND B.IDCLIENTE = ? ORDER BY P.IDPOST DESC",
+		urlCategoria, urlCliente,
+	)
+
+	if erro != nil {
+		return nil, erro
+	}
+	defer linhas.Close()
+
+	var Posts []modelos.Post
+
+	for linhas.Next() {
+		var post modelos.Post
+
+		if erro = linhas.Scan(
+			&post.IDPOST,
+			&post.TITULO,
+			&post.CONTEUDO,
+			&post.ID_CATEGORIA,
+			&post.ID_USUARIO,
+			&post.ID_SITE,
+			&post.ID_CLIENTE,
+			&post.Categoria.NOME,
+			&post.Usuario.NOME,
+			&post.Site.NOME,
+			&post.DATA_CRIACAO,
+		); erro != nil {
+			return nil, erro
+		}
+
+		Posts = append(Posts, post)
+	}
+
+	return Posts, nil
+
+}
+
 // Atualizar altera os dados de uma publicação no banco de dados
 func (repositorio Posts) Atualizar(postID uint64, post modelos.Post) error {
 	statement, erro := repositorio.db.Prepare("UPDATE BDC_POSTS SET TITULO = ?, CONTEUDO = ?, ID_CATEGORIA = ?, ID_USUARIO = ?, ID_SITE = ?, ID_CLIENTE = ? WHERE IDPOST = ?")

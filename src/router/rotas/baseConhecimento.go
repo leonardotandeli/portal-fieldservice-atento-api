@@ -26,6 +26,12 @@ var rotasBaseConhecimento = []Rota{
 		RequerAutenticacao: true,
 	},
 	{
+		URI:                "/base/busca-cat-cliente",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarPostsPorStringCat,
+		RequerAutenticacao: true,
+	},
+	{
 		URI:                "/base/search",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.BuscaPost,
