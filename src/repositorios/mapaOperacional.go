@@ -191,7 +191,7 @@ func (repositorio MapasOperacional) BuscarSites() ([]modelos.Site, error) {
 func (repositorio MapasOperacional) BuscarClientes() ([]modelos.Cliente, error) {
 
 	linhas, erro := repositorio.db.Query(
-		"SELECT IDCLIENTE, NOME FROM CLIENTES ORDER BY IDCLIENTE",
+		"SELECT IDCLIENTE, NOME, LOGO_URL FROM CLIENTES ORDER BY IDCLIENTE",
 	)
 
 	if erro != nil {
@@ -207,6 +207,7 @@ func (repositorio MapasOperacional) BuscarClientes() ([]modelos.Cliente, error) 
 		if erro = linhas.Scan(
 			&mapa_cliente.IDCLIENTE,
 			&mapa_cliente.NOME,
+			&mapa_cliente.LOGO_URL,
 		); erro != nil {
 			return nil, erro
 		}
