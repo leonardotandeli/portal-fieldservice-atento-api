@@ -88,4 +88,75 @@ func CheckAD(w http.ResponseWriter, r *http.Request) {
 
 	respostas.JSON(w, http.StatusOK, modelos.DadosAD{LOGIN_NT: loginNTWithoutSpace, NOME: nomeWithoutSpace, CONTA_ATIVA: contaAtivaWithoutSpace, SENHA_ULTIMA_DEFINICAO: senhaDefinicaoWithoutSpace, SENHA_EXPIRACAO: senhaExpiracaoWithoutSpace, DATA_ULTIMO_LOGON: ultimoLogonWithoutSpace})
 
+func CheckLAPS(w http.ResponseWriter, r *http.Request) {
+	//parametros recebe dados através da url
+	parametros := mux.Vars(r)
+	locador := parametros["locador"]
+
+	fmt.Println(locador)
+
+	//comando de de verificação de usuário no domínio.
+	powershell := "powershell.exe"
+	command := "-command"
+	ps1 := `"Import-Module AdmPwd.ps`
+	ps2 := `"Import-Module ActiveDirectory"`
+
+	ps3 := `"Get-AdmPwdPassword -ComputerName A725468 | Format-Table -AutoSize"`
+	ps4 := `"Write-Host 'Senha Gerada'"`
+
+	//executa o comando net user no cmd
+	cmd := exec.Command(powershell, command, ps1)
+	cmd3 := exec.Command(powershell, command, ps2)
+	cmd4 := exec.Command(powershell, command, ps3)
+	cmd5 := exec.Command(powershell, command, ps4)
+
+	fmt.Print()
+	//retorna os dados do cmd
+	cmdOut, err := cmd.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	out := string(cmdOut)
+	//retorna os dados do cmd
+	cmdOut3, err := cmd3.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	out3 := string(cmdOut3)
+
+	fmt.Println(out3)
+
+	//retorna os dados do cmd
+	cmdOut4, err := cmd4.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	out4 := string(cmdOut4)
+	fmt.Println(out4)
+
+	//retorna os dados do cmd
+	cmdOut5, err := cmd5.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	out5 := string(cmdOut5)
+	fmt.Println(out5)
+	//Define onde estará a informação
+	SenhaSliceInitial := strings.Index(out, "DC=atento,DC=br")
+	SenhaSliceEnding := strings.Index(out, `Senha Gerada`)
+	//fatia os dados com a informação recebida acima
+	senha := string(out)[SenhaSliceInitial+15 : SenhaSliceEnding-25]
+	//Formatação - Remoção dos espaços
+	senhaWithoutSpace := strings.TrimSpace(senha)
+	fmt.Println(senhaWithoutSpace)
+	respostas.JSON(w, http.StatusOK, modelos.DadosLAPS{SENHA: senhaWithoutSpace})
+
 }
