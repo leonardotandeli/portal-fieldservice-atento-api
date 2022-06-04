@@ -86,7 +86,20 @@ func CheckAD(w http.ResponseWriter, r *http.Request) {
 	//Formatação - Remoção dos espaços
 	ultimoLogonWithoutSpace := strings.TrimSpace(ultimoLogon)
 
-	respostas.JSON(w, http.StatusOK, modelos.DadosAD{LOGIN_NT: loginNTWithoutSpace, NOME: nomeWithoutSpace, CONTA_ATIVA: contaAtivaWithoutSpace, SENHA_ULTIMA_DEFINICAO: senhaDefinicaoWithoutSpace, SENHA_EXPIRACAO: senhaExpiracaoWithoutSpace, DATA_ULTIMO_LOGON: ultimoLogonWithoutSpace})
+	//GPO
+	//Define onde estará a informação
+	gpoSliceInitial := strings.Index(cmdReturn, "es de Grupo Global")
+	gpoSliceEnding := strings.Index(cmdReturn, `Comando conclu`)
+	//fatia os dados com a informação recebida acima
+	gpo := string(cmdReturn)[gpoSliceInitial+18 : gpoSliceEnding]
+	//Formatação - Remoção dos espaços
+	gpoFormat := strings.ReplaceAll(gpo, "*", "<br/>")
+
+	gpoWithoutSpace := strings.TrimSpace(gpoFormat)
+
+	respostas.JSON(w, http.StatusOK, modelos.DadosAD{LOGIN_NT: loginNTWithoutSpace, NOME: nomeWithoutSpace, CONTA_ATIVA: contaAtivaWithoutSpace, SENHA_ULTIMA_DEFINICAO: senhaDefinicaoWithoutSpace, SENHA_EXPIRACAO: senhaExpiracaoWithoutSpace, DATA_ULTIMO_LOGON: ultimoLogonWithoutSpace, GPO: gpoWithoutSpace})
+
+}
 
 func CheckLAPS(w http.ResponseWriter, r *http.Request) {
 	//parametros recebe dados através da url
