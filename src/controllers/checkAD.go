@@ -12,57 +12,80 @@ import (
 )
 
 func CheckAD(w http.ResponseWriter, r *http.Request) {
+	//parametros recebe dados através da url
 	parametros := mux.Vars(r)
-	ID := parametros["login"]
+	loginNT := parametros["login"]
 
-	fmt.Println("retorno ok", ID)
+	//comando de de verificação de usuário no domínio.
+	net := "net"
+	user := "user"
+	domain := "/domain"
 
-	prg := "net"
-
-	prg1 := "user"
-
-	arg2 := "/domain"
-
-	cmd := exec.Command(prg, prg1, ID, arg2)
-	stdout, err := cmd.Output()
+	//executa o comando net user no cmd
+	cmd := exec.Command(net, user, loginNT, domain)
+	//retorna os dados do cmd
+	cmdOut, err := cmd.Output()
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
+	cmdReturn := string(cmdOut)
 
-	user := string(stdout)
-	nomeUsuario := strings.Index(user, "rio")
-	nomeUsuario2 := strings.Index(user, `Nome completo`)
-	username1 := string(stdout)[nomeUsuario+3 : nomeUsuario2]
-	usernameCorreto := strings.TrimSpace(username1)
+	//LOGIN NT
+	//Define onde estará a informação
+	LoginSliceInitial := strings.Index(cmdReturn, "rio")
+	LoginSliceEnding := strings.Index(cmdReturn, `Nome completo`)
+	//fatia os dados com a informação recebida acima
+	logint := string(cmdReturn)[LoginSliceInitial+3 : LoginSliceEnding]
+	//Formatação - Remoção dos espaços
+	loginNTWithoutSpace := strings.TrimSpace(logint)
 
-	fmt.Println(usernameCorreto)
+	//NOME COMPLETO
+	//Define onde estará a informação
+	NomeSliceInitial := strings.Index(cmdReturn, "Nome completo")
+	NomeSliceEnding := strings.Index(cmdReturn, `Comen`)
+	//fatia os dados com a informação recebida acima
+	nome := string(cmdReturn)[NomeSliceInitial+13 : NomeSliceEnding]
+	//Formatação - Remoção dos espaços
+	nomeWithoutSpace := strings.TrimSpace(nome)
 
-	nomeOperador := strings.Index(user, "Nome completo")
-	nomeOperador2 := strings.Index(user, `Comen`)
-	nome1 := string(stdout)[nomeOperador+13 : nomeOperador2]
-	nomeCorreto := strings.TrimSpace(nome1)
+	//CONTA ATIVA
+	//Define onde estará a informação
+	ContaASliceInitial := strings.Index(cmdReturn, "Conta ativa")
+	ContaASliceEnding := strings.Index(cmdReturn, `Conta expira`)
+	//fatia os dados com a informação recebida acima
+	contaAtiva := string(cmdReturn)[ContaASliceInitial:ContaASliceEnding]
+	//Formatação - Remoção dos espaços
+	contaAtivaWithoutSpace := strings.TrimSpace(contaAtiva)
 
-	fmt.Println(usernameCorreto)
+	//ULTIMA DEFINIÇÃO DE SENHA
+	//Define onde estará a informação
+	senhaDefinicaoSliceInitial := strings.Index(cmdReturn, "o de senha")
+	senhaDefinicaoSliceEnding := strings.Index(cmdReturn, `A senha expira`)
+	//fatia os dados com a informação recebida acima
+	senhaDefinicao := string(cmdReturn)[senhaDefinicaoSliceInitial:senhaDefinicaoSliceEnding]
+	//Formatação - Remoção dos espaços
+	senhaDefinicaoWithoutSpace := strings.TrimSpace(senhaDefinicao)
 
-	gpoUsuario := strings.Index(user, "Grupo Global")
-	gpoUsuario2 := strings.Index(user, `Comando concl`)
-	gpo1 := string(stdout)[gpoUsuario:gpoUsuario2]
-	gpoCorreto := strings.TrimSpace(gpo1)
+	//EXPIRACAO DE SENHA
+	//Define onde estará a informação
+	senhaExpiracaoSliceInitial := strings.Index(cmdReturn, "A senha expira")
+	senhaExpiracaoSliceEnding := strings.Index(cmdReturn, `Altera`)
+	//fatia os dados com a informação recebida acima
+	senhaExpiracao := string(cmdReturn)[senhaExpiracaoSliceInitial:senhaExpiracaoSliceEnding]
+	//Formatação - Remoção dos espaços
+	senhaExpiracaoWithoutSpace := strings.TrimSpace(senhaExpiracao)
 
-	//fmt.Print(string(stdout)[122:133])
+	//DATA ULTIMO LOGON
+	//Define onde estará a informação
+	ultimoLogonSliceInitial := strings.Index(cmdReturn, "A senha expira")
+	ultimoLogonSliceEnding := strings.Index(cmdReturn, `Altera`)
+	//fatia os dados com a informação recebida acima
+	ultimoLogon := string(cmdReturn)[ultimoLogonSliceInitial:ultimoLogonSliceEnding]
+	//Formatação - Remoção dos espaços
+	ultimoLogonWithoutSpace := strings.TrimSpace(ultimoLogon)
 
-	//fmt.Println(string(stdout))
-
-	//	fmt.Println(string(stdout))
-
-	i := strings.Contains(user, "Nome")
-	fmt.Println(i)
-	//	input := string(stdout)
-
-	//	input, _ = string.ReadString('\n')
-
-	respostas.JSON(w, http.StatusOK, modelos.DadosAD{LOGIN_NT: usernameCorreto, NOME: nomeCorreto, GPOS: gpoCorreto})
+	respostas.JSON(w, http.StatusOK, modelos.DadosAD{LOGIN_NT: loginNTWithoutSpace, NOME: nomeWithoutSpace, CONTA_ATIVA: contaAtivaWithoutSpace, SENHA_ULTIMA_DEFINICAO: senhaDefinicaoWithoutSpace, SENHA_EXPIRACAO: senhaExpiracaoWithoutSpace, DATA_ULTIMO_LOGON: ultimoLogonWithoutSpace})
 
 }
