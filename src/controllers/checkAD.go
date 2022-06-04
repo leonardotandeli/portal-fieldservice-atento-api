@@ -106,7 +106,7 @@ func CheckLAPS(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	locador := parametros["locador"]
 
-	fmt.Println(locador)
+	//fmt.Println(locador)
 
 	//comando de de verificação de usuário no domínio.
 	ps := "powershell.exe"
@@ -125,16 +125,22 @@ func CheckLAPS(w http.ResponseWriter, r *http.Request) {
 	}
 	cmdReturn := string(cmdOut)
 
-	fmt.Println(cmdReturn)
+	//	fmt.Println(cmdReturn)
 
 	//Define onde estará a informação
-	SenhaSliceInitial := strings.Index(cmdReturn, "ms-Mcs-AdmPwd")
-	SenhaSliceEnding := strings.Index(cmdReturn, `ms-Mcs-AdmPwdExpirationTime`)
-	//fatia os dados com a informação recebida acima
-	senha := string(cmdReturn)[SenhaSliceInitial+38 : SenhaSliceEnding]
-	//Formatação - Remoção dos espaços
-	senhaWithoutSpace := strings.TrimSpace(senha)
-	fmt.Println(senhaWithoutSpace)
+	var senhaWithoutSpace = ""
+	if strings.Contains(cmdReturn, "ms-Mcs-AdmPwd") == true {
+		SenhaSliceInitial := strings.Index(cmdReturn, "ms-Mcs-AdmPwd")
+		SenhaSliceEnding := strings.Index(cmdReturn, `ms-Mcs-AdmPwdExpirationTime`)
+		//fatia os dados com a informação recebida acima
+		senha := string(cmdReturn)[SenhaSliceInitial+38 : SenhaSliceEnding]
+		//Formatação - Remoção dos espaços
+		senhaWithoutSpace = strings.TrimSpace(senha)
+		//	fmt.Println(senhaWithoutSpace)
+	} else {
+		senhaWithoutSpace = "Nenhuma senha encontrada"
+	}
+
 	respostas.JSON(w, http.StatusOK, modelos.DadosLAPS{SENHA: senhaWithoutSpace})
 
 }
