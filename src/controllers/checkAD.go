@@ -55,7 +55,7 @@ func CheckAD(w http.ResponseWriter, r *http.Request) {
 	ContaASliceInitial := strings.Index(cmdReturn, "Conta ativa")
 	ContaASliceEnding := strings.Index(cmdReturn, `Conta expira`)
 	//fatia os dados com a informação recebida acima
-	contaAtiva := string(cmdReturn)[ContaASliceInitial:ContaASliceEnding]
+	contaAtiva := string(cmdReturn)[ContaASliceInitial+11 : ContaASliceEnding]
 	//Formatação - Remoção dos espaços
 	contaAtivaWithoutSpace := strings.TrimSpace(contaAtiva)
 
@@ -64,7 +64,7 @@ func CheckAD(w http.ResponseWriter, r *http.Request) {
 	senhaDefinicaoSliceInitial := strings.Index(cmdReturn, "o de senha")
 	senhaDefinicaoSliceEnding := strings.Index(cmdReturn, `A senha expira`)
 	//fatia os dados com a informação recebida acima
-	senhaDefinicao := string(cmdReturn)[senhaDefinicaoSliceInitial:senhaDefinicaoSliceEnding]
+	senhaDefinicao := string(cmdReturn)[senhaDefinicaoSliceInitial+10 : senhaDefinicaoSliceEnding]
 	//Formatação - Remoção dos espaços
 	senhaDefinicaoWithoutSpace := strings.TrimSpace(senhaDefinicao)
 
@@ -73,16 +73,16 @@ func CheckAD(w http.ResponseWriter, r *http.Request) {
 	senhaExpiracaoSliceInitial := strings.Index(cmdReturn, "A senha expira")
 	senhaExpiracaoSliceEnding := strings.Index(cmdReturn, `Altera`)
 	//fatia os dados com a informação recebida acima
-	senhaExpiracao := string(cmdReturn)[senhaExpiracaoSliceInitial:senhaExpiracaoSliceEnding]
+	senhaExpiracao := string(cmdReturn)[senhaExpiracaoSliceInitial+14 : senhaExpiracaoSliceEnding]
 	//Formatação - Remoção dos espaços
 	senhaExpiracaoWithoutSpace := strings.TrimSpace(senhaExpiracao)
 
 	//DATA ULTIMO LOGON
 	//Define onde estará a informação
-	ultimoLogonSliceInitial := strings.Index(cmdReturn, "A senha expira")
-	ultimoLogonSliceEnding := strings.Index(cmdReturn, `Altera`)
+	ultimoLogonSliceInitial := strings.Index(cmdReturn, "ltimo logon")
+	ultimoLogonSliceEnding := strings.Index(cmdReturn, `Hor`)
 	//fatia os dados com a informação recebida acima
-	ultimoLogon := string(cmdReturn)[ultimoLogonSliceInitial:ultimoLogonSliceEnding]
+	ultimoLogon := string(cmdReturn)[ultimoLogonSliceInitial+11 : ultimoLogonSliceEnding]
 	//Formatação - Remoção dos espaços
 	ultimoLogonWithoutSpace := strings.TrimSpace(ultimoLogon)
 

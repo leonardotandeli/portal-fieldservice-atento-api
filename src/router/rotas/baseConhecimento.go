@@ -97,4 +97,10 @@ var rotasBaseConhecimento = []Rota{
 		Funcao:             controllers.CheckAD,
 		RequerAutenticacao: true,
 	},
+	{
+		URI:                "/checklaps/{locador}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.CheckLAPS,
+		RequerAutenticacao: true,
+	},
 }

@@ -1,6 +1,5 @@
 package modelos
 
-// DadosAutenticacao contém o token e o id do usuário autenticado, além de outras informações que ficam armazenadas no cookie
 type DadosAD struct {
 	LOGIN_NT               string `json:"login_nt"`
 	NOME                   string `json:"nome,omitempty"`
