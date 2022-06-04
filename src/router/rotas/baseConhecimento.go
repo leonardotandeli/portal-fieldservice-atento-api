@@ -91,4 +91,10 @@ var rotasBaseConhecimento = []Rota{
 		Funcao:             controllers.BuscarCliente,
 		RequerAutenticacao: true,
 	},
+	{
+		URI:                "/checkad/{login}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.CheckAD,
+		RequerAutenticacao: true,
+	},
 }
