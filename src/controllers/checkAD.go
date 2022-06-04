@@ -109,21 +109,13 @@ func CheckLAPS(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(locador)
 
 	//comando de de verificação de usuário no domínio.
-	powershell := "powershell.exe"
-	command := "-command"
-	ps1 := `"Import-Module AdmPwd.ps`
-	ps2 := `"Import-Module ActiveDirectory"`
-
-	ps3 := `"Get-AdmPwdPassword -ComputerName A725468 | Format-Table -AutoSize"`
-	ps4 := `"Write-Host 'Senha Gerada'"`
+	ps := "powershell.exe"
+	cm := "-command"
+	ad := "Get-ADComputer -Identity"
+	ad2 := "-Properties *"
 
 	//executa o comando net user no cmd
-	cmd := exec.Command(powershell, command, ps1)
-	cmd3 := exec.Command(powershell, command, ps2)
-	cmd4 := exec.Command(powershell, command, ps3)
-	cmd5 := exec.Command(powershell, command, ps4)
-
-	fmt.Print()
+	cmd := exec.Command(ps, cm, ad, locador, ad2)
 	//retorna os dados do cmd
 	cmdOut, err := cmd.Output()
 
@@ -131,42 +123,15 @@ func CheckLAPS(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 		return
 	}
-	out := string(cmdOut)
-	//retorna os dados do cmd
-	cmdOut3, err := cmd3.Output()
+	cmdReturn := string(cmdOut)
 
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	out3 := string(cmdOut3)
+	fmt.Println(cmdReturn)
 
-	fmt.Println(out3)
-
-	//retorna os dados do cmd
-	cmdOut4, err := cmd4.Output()
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	out4 := string(cmdOut4)
-	fmt.Println(out4)
-
-	//retorna os dados do cmd
-	cmdOut5, err := cmd5.Output()
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	out5 := string(cmdOut5)
-	fmt.Println(out5)
 	//Define onde estará a informação
-	SenhaSliceInitial := strings.Index(out, "DC=atento,DC=br")
-	SenhaSliceEnding := strings.Index(out, `Senha Gerada`)
+	SenhaSliceInitial := strings.Index(cmdReturn, "ms-Mcs-AdmPwd")
+	SenhaSliceEnding := strings.Index(cmdReturn, `ms-Mcs-AdmPwdExpirationTime`)
 	//fatia os dados com a informação recebida acima
-	senha := string(out)[SenhaSliceInitial+15 : SenhaSliceEnding-25]
+	senha := string(cmdReturn)[SenhaSliceInitial+38 : SenhaSliceEnding]
 	//Formatação - Remoção dos espaços
 	senhaWithoutSpace := strings.TrimSpace(senha)
 	fmt.Println(senhaWithoutSpace)

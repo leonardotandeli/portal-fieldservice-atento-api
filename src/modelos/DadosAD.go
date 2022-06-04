@@ -7,4 +7,9 @@ type DadosAD struct {
 	SENHA_ULTIMA_DEFINICAO string `json:"senha_ultima_definicao,omitempty"`
 	SENHA_EXPIRACAO        string `json:"senha_expiracao,omitempty"`
 	DATA_ULTIMO_LOGON      string `json:"data_ultimo_logon,omitempty"`
+	GPO                    string `json:"gpo,omitempty"`
+}
+
+type DadosLAPS struct {
+	SENHA string `json:"senha,omitempty"`
 }
