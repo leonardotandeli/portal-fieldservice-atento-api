@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Define todas as rotas do mapa operacional
+// rotasMapaOperacional define todas as rotas do mapa operacional
 var rotasMapaOperacional = []Rota{
 	{
 		URI:                "/mapa/operacoes",

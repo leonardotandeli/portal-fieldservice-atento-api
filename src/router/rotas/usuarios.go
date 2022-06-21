@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Define todas as rotas de usuários
+// rotasUsuarios define todas as rotas de usuários
 var rotasUsuarios = []Rota{
 	{
 		URI:                "/usuarios",

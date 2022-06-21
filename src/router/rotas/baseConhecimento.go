@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Define todas as rotas da base de conhecimento
+// rotasBaseConhecimento define todas as rotas da base de conhecimento
 var rotasBaseConhecimento = []Rota{
 	{
 		URI:                "/base",
@@ -89,6 +89,18 @@ var rotasBaseConhecimento = []Rota{
 		URI:                "/clientes/{clienteId}",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.BuscarCliente,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/checkad/{login}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.ConsultaAD,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/checklaps/{locador}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.ConsultaLAPS,
 		RequerAutenticacao: true,
 	},
 }

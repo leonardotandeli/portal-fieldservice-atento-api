@@ -3,6 +3,7 @@ module api
 go 1.14
 
 require (
+	github.com/abdfnx/gosh v0.3.9 // indirect
 	github.com/badoux/checkmail v1.2.1 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt/v4 v4.4.0

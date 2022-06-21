@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql" // Driver
 )
 
-// Conectar realiza a conexão com o banco de dados utilizando os dados do arquivo de variaveis de ambiente
+// Conectar realiza a conexão com o banco de dados utilizando os dados informados no arquivo de variaveis de ambiente (.env)
 func Conectar() (*sql.DB, error) {
 	db, erro := sql.Open("mysql", config.StringConexaoBanco)
 	if erro != nil {

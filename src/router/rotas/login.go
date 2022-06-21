@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Define a rota de login
+// rotaLogin define a rota de login
 var rotaLogin = Rota{
 	URI:                "/login",
 	Metodo:             http.MethodPost,
