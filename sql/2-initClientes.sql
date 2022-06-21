@@ -1,14 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `field` 
-USE `field`;
-
-CREATE TABLE IF NOT EXISTS `clientes` (
-  `IDCLIENTE` int(11) NOT NULL AUTO_INCREMENT,
-  `NOME` varchar(100) NOT NULL,
-  `LOGO_URL` varchar(100) NOT NULL,
-  PRIMARY KEY (`IDCLIENTE`)
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;
-
-INSERT INTO `clientes` (`IDCLIENTE`, `NOME`, `LOGO_URL`) VALUES
+INSERT INTO CLIENTES (IDCLIENTE, NOME, LOGO_URL) VALUES
 	(1, 'INSTRUÇÕES GERAIS', '/assets/images/icons_clientes/geral.jpg'),
 	(2, 'ALELO', '/assets/images/icons_clientes/alelo.jpg'),
 	(3, 'APPLE', '/assets/images/icons_clientes/apple.jpg'),
