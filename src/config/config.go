@@ -10,17 +10,17 @@ import (
 )
 
 var (
-	// StringConexaoBanco é a string de conexão com o MySQL
+	// StringConexaoBanco é a variável onde será iniciado a string de conexão com o MySQL
 	StringConexaoBanco = ""
 
-	// Porta Http que a API vai rodar
+	// Porta inicia a variável onde será indicado a porta HTTP que a API vai rodar
 	Porta = 0
 
 	// SecretKey é a chave que vai ser usada para assinar o token
 	SecretKey []byte
 )
 
-// Carregar vai inicializar as variáveis de ambiente presentes no arquivo .env
+// Carregar vai inicializar buscar as variáveis de ambiente informadas no arquivo (.env)
 func Carregar() {
 	var erro error
 

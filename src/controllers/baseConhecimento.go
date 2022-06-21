@@ -46,9 +46,10 @@ func CriarPost(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusCreated, post)
 }
 
-// BuscarPosts traz as publicações
+// BuscarPosts traz as publicações existentes no banco de dados.
 func BuscarPosts(w http.ResponseWriter, r *http.Request) {
 
+	//filtro de url para categorias e clientes
 	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
 	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
 
@@ -70,32 +71,10 @@ func BuscarPosts(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarPosts traz as publicações
-func BuscaPost(w http.ResponseWriter, r *http.Request) {
-
-	urlBusca := strings.ToLower(r.URL.Query().Get("busca"))
-	println(urlBusca)
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	posts, erro := repositorio.Busca(urlBusca)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, posts)
-
-}
-
-// BuscarPosts traz as publicações
+// BuscarPostsPorString traz as publicações através de parametros informados na URL
 func BuscarPostsPorString(w http.ResponseWriter, r *http.Request) {
 
+	//filtro de url para categorias e clientes
 	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
 	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
 
@@ -117,9 +96,9 @@ func BuscarPostsPorString(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarPosts traz as publicações
+// BuscarPostsPorStringCat traz as publicações através de parametros informados na URL
 func BuscarPostsPorStringCat(w http.ResponseWriter, r *http.Request) {
-
+	//filtro de url para categorias e clientes
 	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
 	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
 
@@ -141,7 +120,31 @@ func BuscarPostsPorStringCat(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarPost traz uma única publicação
+// BuscaPost faz a busca publicações utilizando uma palavra (search box)
+func BuscaPost(w http.ResponseWriter, r *http.Request) {
+
+	//filtro por palavras chaves
+	urlBusca := strings.ToLower(r.URL.Query().Get("busca"))
+	println(urlBusca)
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePosts(db)
+	posts, erro := repositorio.Busca(urlBusca)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, posts)
+
+}
+
+// BuscarPost retorna uma única publicação
 func BuscarPost(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["postId"], 10, 64)
@@ -204,7 +207,7 @@ func AtualizarPost(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// DeletarPost exclui os dados de uma publicação
+// DeletarPost exclui uma publicação
 func DeletarPost(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
@@ -278,7 +281,7 @@ func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// AtualizarPost altera os dados de uma publicação
+// AtualizarPost altera os dados de uma categoria
 func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
@@ -315,7 +318,7 @@ func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// DeletarPost exclui os dados de uma publicação
+// DeletarCategoria exclui uma categoria
 func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)

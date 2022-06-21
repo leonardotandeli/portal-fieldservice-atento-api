@@ -15,7 +15,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CriarDadosMapa adiciona uma nova operacao no banco de dados
+// CriarUsuario adiciona uma novo usuário no banco de dados
 func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {

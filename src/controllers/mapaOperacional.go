@@ -67,7 +67,7 @@ func BuscarDadosMapa(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarDadosMapa traz as operacoes armazenadas no banco de dados
+// BuscarDadosMapaString traz as operacoes armazenadas no banco de dados através de parametros informados na URL
 func BuscarDadosMapaString(w http.ResponseWriter, r *http.Request) {
 
 	urlSite := strings.ToLower(r.URL.Query().Get("site"))
@@ -173,7 +173,7 @@ func BuscarDadosDominios(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarPublicacao traz uma única publicação
+// BuscarDadoMapa retorna uma única publicação
 func BuscarDadoMapa(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["mapaId"], 10, 64)
@@ -199,7 +199,7 @@ func BuscarDadoMapa(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusOK, post)
 }
 
-// AtualizarPublicacao altera os dados de uma publicação
+// AtualizarDadosMapa altera os dados de uma operação
 func AtualizarDadosMapa(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	mapaID, erro := strconv.ParseUint(parametros["mapaId"], 10, 64)
@@ -237,7 +237,7 @@ func AtualizarDadosMapa(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// DeletarPublicacao exclui os dados de uma publicação
+// DeletarDadosMapa exclui os dados de uma operação
 func DeletarDadosMapa(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)

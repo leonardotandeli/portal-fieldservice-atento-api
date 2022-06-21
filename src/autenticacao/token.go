@@ -12,11 +12,11 @@ import (
 	jwt "github.com/golang-jwt/jwt/v4"
 )
 
-// CriarToken retorna um token assinado com as permissões do usuário
+// CriarToken retorna um token assinado com os dados do usuário
 func CriarToken(usuarioID uint64) (string, error) {
 	permissoes := jwt.MapClaims{}
 	permissoes["authorized"] = true
-	permissoes["exp"] = time.Now().Add(time.Hour * 12).Unix() //numero de horas para expirar o token
+	permissoes["exp"] = time.Now().Add(time.Hour * 12).Unix() //numero de horas para expirar o token e solicitar novo login
 	permissoes["usuarioId"] = usuarioID
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
 	return token.SignedString([]byte(config.SecretKey))
