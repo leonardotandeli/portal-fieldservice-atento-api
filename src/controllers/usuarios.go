@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"api/src/banco"
+	"api/src/middlewares"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
@@ -46,6 +47,9 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Criação do usuário: "+strconv.Itoa(int(usuario.IDUSUARIO))+" "+usuario.LOGIN_NT+" "+usuario.NOME)
 
 	respostas.JSON(w, http.StatusCreated, usuario)
 }
@@ -130,6 +134,9 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Atualização de Usuário: "+strconv.Itoa(int(usuario.IDUSUARIO))+" "+usuario.LOGIN_NT+" "+usuario.NOME)
+
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
@@ -153,6 +160,9 @@ func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Usuário Deletado: "+strconv.Itoa(int(usuarioID)))
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
@@ -193,6 +203,8 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Senha alterada: "+strconv.Itoa(int(usuarioID)))
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }

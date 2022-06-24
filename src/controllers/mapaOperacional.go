@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"api/src/banco"
+	"api/src/middlewares"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
@@ -40,6 +41,9 @@ func CriarDadosMapa(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Mapa operacional criado: "+strconv.Itoa(int(mapa.IDMAPA))+" "+mapa.Cliente.NOME)
 
 	respostas.JSON(w, http.StatusCreated, mapa)
 }
@@ -234,6 +238,9 @@ func AtualizarDadosMapa(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Mapa operacional atualizado: "+strconv.Itoa(int(mapa.IDMAPA))+" "+mapa.Cliente.NOME)
+
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
@@ -259,6 +266,9 @@ func DeletarDadosMapa(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Mapa operacional excluido: "+strconv.Itoa(int(mapaID)))
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }

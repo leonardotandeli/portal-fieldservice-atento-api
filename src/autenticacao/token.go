@@ -2,6 +2,7 @@ package autenticacao
 
 import (
 	"api/src/config"
+	"api/src/modelos"
 	"errors"
 	"fmt"
 	"net/http"
@@ -13,11 +14,13 @@ import (
 )
 
 // CriarToken retorna um token assinado com os dados do usuário
-func CriarToken(usuarioID uint64) (string, error) {
+func CriarToken(usuarioID uint64, LOGIN_NT string, NOME string) (string, error) {
 	permissoes := jwt.MapClaims{}
 	permissoes["authorized"] = true
 	permissoes["exp"] = time.Now().Add(time.Hour * 12).Unix() //numero de horas para expirar o token e solicitar novo login
 	permissoes["usuarioId"] = usuarioID
+	permissoes["login_nt"] = LOGIN_NT
+	permissoes["nome"] = NOME
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
 	return token.SignedString([]byte(config.SecretKey))
 }
@@ -78,4 +81,26 @@ func retornarChaveDeVerificacao(token *jwt.Token) (interface{}, error) {
 	}
 
 	return config.SecretKey, nil
+}
+
+// ExtrairUsuarioID extrai o dados do usuário e valida o token.
+func ExtrairDadosUsuario(r *http.Request) (user modelos.Logs) {
+	tokenString := extrairToken(r)
+	token, erro := jwt.Parse(tokenString, retornarChaveDeVerificacao)
+	if erro != nil {
+		return user
+	}
+
+	if permissoes, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		user.Usuario.IDUSUARIO, erro = strconv.ParseUint(fmt.Sprintf("%.0f", permissoes["usuarioId"]), 10, 64)
+		if erro != nil {
+			return user
+		}
+		user.Usuario.LOGIN_NT = fmt.Sprintf("%s", permissoes["login_nt"])
+		user.Usuario.NOME = fmt.Sprintf("%s", permissoes["nome"])
+
+		return user
+	}
+
+	return user
 }

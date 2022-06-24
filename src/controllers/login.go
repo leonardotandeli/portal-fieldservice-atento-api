@@ -3,11 +3,13 @@ package controllers
 import (
 	"api/src/autenticacao"
 	"api/src/banco"
+	"api/src/middlewares"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
 	"api/src/seguranca"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -47,11 +49,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.IDUSUARIO)
+	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.IDUSUARIO, usuarioSalvoNoBanco.LOGIN_NT, usuarioSalvoNoBanco.NOME)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+	fmt.Println(usuarioSalvoNoBanco.LOGIN_NT)
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Login")
 
 	// retorna dados do usuário como JSON
 	usuarioID := strconv.FormatUint(usuarioSalvoNoBanco.IDUSUARIO, 10)

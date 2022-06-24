@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"api/src/banco"
+	"api/src/middlewares"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
@@ -42,6 +43,9 @@ func CriarPost(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Post criado: "+strconv.Itoa(int(post.IDPOST))+" "+post.TITULO)
 
 	respostas.JSON(w, http.StatusCreated, post)
 }
@@ -204,6 +208,9 @@ func AtualizarPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Post atualizado: "+strconv.Itoa(int(post.IDPOST))+" "+post.TITULO)
+
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
@@ -229,6 +236,9 @@ func DeletarPost(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Post deletado: "+strconv.Itoa(int(postID)))
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
@@ -315,6 +325,9 @@ func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Categoria atualizada: "+strconv.Itoa(int(catID)))
+
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
@@ -340,6 +353,9 @@ func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Categoria Deletada: "+strconv.Itoa(int(catID)))
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
@@ -399,6 +415,8 @@ func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Categoria criada: "+strconv.Itoa(int(cat.IDCATEGORIA))+" "+cat.NOME)
 
 	respostas.JSON(w, http.StatusCreated, cat)
 }
