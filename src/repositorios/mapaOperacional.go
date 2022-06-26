@@ -44,10 +44,9 @@ func (repositorio MapasOperacional) CriarDadosMapa(mapa modelos.MapaOperacional)
 // Buscar traz todas as entradas do mapa operacional
 func (repositorio MapasOperacional) Buscar(urlSite string, urlCliente string) ([]modelos.MapaOperacional, error) {
 
-	urlSite = fmt.Sprintf("%s", urlSite) // filtra por parametro na url ?site=[id]
-	fmt.Println(urlSite)
+	urlSite = fmt.Sprintf("%s", urlSite)       // filtra por parametro na url ?site=[id]
 	urlCliente = fmt.Sprintf("%s", urlCliente) // filtra por parametro na url ?site=[id]
-	fmt.Println(urlCliente)
+
 	linhas, erro := repositorio.db.Query(
 		"SELECT M.IDMAPA, M.OPERACAO, M.VLAN_DADOS, M.VLAN_VOZ, M.CONFIG_CONTRATUAL, M.VERSAO_WINDOWS, M.IMAGEM, M.TEMPLATE, M.GRUPO_IMDB, M.GRAVADOR, M.OBSERVACOES, M.ID_SITE, M.ID_CLIENTE, M.ID_DOMINIO, M.ID_DAC, S.NOME, C.NOME, D.NOME, T.NOME FROM MAPA_OPERACIONAL M INNER JOIN SITES S ON M.ID_SITE = S.IDSITE INNER JOIN CLIENTES C ON M.ID_CLIENTE = C.IDCLIENTE INNER JOIN DOMINIOS D ON M.ID_DOMINIO = D.IDDOMINIO INNER JOIN DACS T ON M.ID_DAC = T.IDDAC ORDER BY M.IDMAPA DESC",
 	)
@@ -98,10 +97,8 @@ var stringC string
 // Buscar traz todas as entradas do mapa operacional
 func (repositorio MapasOperacional) BuscarString(urlSite string, urlCliente string) ([]modelos.MapaOperacional, error) {
 
-	urlSite = fmt.Sprintf("%s", urlSite) // filtra por parametro na url ?site=[id]
-	fmt.Println(urlSite)
+	urlSite = fmt.Sprintf("%s", urlSite)       // filtra por parametro na url ?site=[id]
 	urlCliente = fmt.Sprintf("%s", urlCliente) // filtra por parametro na url ?site=[id]
-	fmt.Println(urlCliente)
 
 	if urlSite == "" && urlCliente != "" {
 		stringC = "SELECT M.IDMAPA, M.OPERACAO, M.VLAN_DADOS, M.VLAN_VOZ, M.CONFIG_CONTRATUAL, M.VERSAO_WINDOWS, M.IMAGEM, M.TEMPLATE, M.GRUPO_IMDB, M.GRAVADOR, M.OBSERVACOES, M.ID_SITE, M.ID_CLIENTE, M.ID_DOMINIO, M.ID_DAC, S.NOME, C.NOME, D.NOME, T.NOME FROM MAPA_OPERACIONAL M INNER JOIN SITES S ON M.ID_SITE = S.IDSITE INNER JOIN CLIENTES C ON M.ID_CLIENTE = C.IDCLIENTE INNER JOIN DOMINIOS D ON M.ID_DOMINIO = D.IDDOMINIO INNER JOIN DACS T ON M.ID_DAC = T.IDDAC WHERE S.IDSITE = ? OR C.IDCLIENTE = ? ORDER BY M.IDMAPA DESC"
@@ -112,7 +109,7 @@ func (repositorio MapasOperacional) BuscarString(urlSite string, urlCliente stri
 	} else {
 		stringC = "SELECT M.IDMAPA, M.OPERACAO, M.VLAN_DADOS, M.VLAN_VOZ, M.CONFIG_CONTRATUAL, M.VERSAO_WINDOWS, M.IMAGEM, M.TEMPLATE, M.GRUPO_IMDB, M.GRAVADOR, M.OBSERVACOES, M.ID_SITE, M.ID_CLIENTE, M.ID_DOMINIO, M.ID_DAC, S.NOME, C.NOME, D.NOME, T.NOME FROM MAPA_OPERACIONAL M INNER JOIN SITES S ON M.ID_SITE = S.IDSITE INNER JOIN CLIENTES C ON M.ID_CLIENTE = C.IDCLIENTE INNER JOIN DOMINIOS D ON M.ID_DOMINIO = D.IDDOMINIO INNER JOIN DACS T ON M.ID_DAC = T.IDDAC WHERE S.IDSITE LIKE ? OR C.IDCLIENTE LIKE ? ORDER BY M.IDMAPA DESC"
 	}
-	fmt.Println(stringC)
+	//	fmt.Println(stringC)
 	linhas, erro := repositorio.db.Query(stringC, urlSite, urlCliente)
 
 	if erro != nil {
