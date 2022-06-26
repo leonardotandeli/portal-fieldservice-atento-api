@@ -30,7 +30,7 @@ func Autenticar(proximaFuncao http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-//LoggerOnDb escreve informações da requisição no banco de dados.
+//LoggerOnDb escreve informações da requisições POST, PUT e DELETE no banco de dados.
 func LoggerOnDb(w http.ResponseWriter, r *http.Request, ACTION string) {
 
 	//logger
