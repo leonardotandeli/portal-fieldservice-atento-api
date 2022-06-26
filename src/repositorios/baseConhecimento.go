@@ -401,7 +401,7 @@ func (repositorio Posts) AtualizarCategoria(catID uint64, cat modelos.Post_Categ
 
 // Deletar exclui uma Categoria do banco de dados
 func (repositorio Posts) DeletarCategoria(catID uint64) error {
-	statement, erro := repositorio.db.Prepare("DELETE FROM BDC_CATEGORIAS WHERE IDPOST = ?")
+	statement, erro := repositorio.db.Prepare("DELETE FROM BDC_CATEGORIAS WHERE IDCATEGORIA = ?")
 	if erro != nil {
 		return erro
 	}
