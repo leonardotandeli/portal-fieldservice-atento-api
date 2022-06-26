@@ -3,7 +3,6 @@ package controllers
 import (
 	"api/src/autenticacao"
 	"api/src/banco"
-	"api/src/middlewares"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
@@ -13,6 +12,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // Login é responsável por autenticar um usuário na API
@@ -57,7 +57,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(usuarioSalvoNoBanco.LOGIN_NT)
 
 	//logger db
-	middlewares.LoggerOnDb(w, r, "Login")
+	var logs modelos.Logs
+	logs.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
+	logs.Usuario.LOGIN_NT = usuarioSalvoNoBanco.LOGIN_NT
+	logs.Usuario.NOME = usuarioSalvoNoBanco.NOME
+	logs.DATA = time.Now()
+	logs.ACTION = "Login Efetuado"
+
+	repositorioLogs := repositorios.NovoRepositorioDeLogs(db)
+	logs.Usuario.IDUSUARIO, erro = repositorioLogs.LoggerDB(logs)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 
 	// retorna dados do usuário como JSON
 	usuarioID := strconv.FormatUint(usuarioSalvoNoBanco.IDUSUARIO, 10)

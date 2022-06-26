@@ -15,7 +15,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CriarPost adiciona uma nova publicação no banco de dados
+// CriarPost adiciona uma novo post no banco de dados
 func CriarPost(w http.ResponseWriter, r *http.Request) {
 
 	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
@@ -48,130 +48,6 @@ func CriarPost(w http.ResponseWriter, r *http.Request) {
 	middlewares.LoggerOnDb(w, r, "Post criado: "+strconv.Itoa(int(post.IDPOST))+" "+post.TITULO)
 
 	respostas.JSON(w, http.StatusCreated, post)
-}
-
-// BuscarPosts traz as publicações existentes no banco de dados.
-func BuscarPosts(w http.ResponseWriter, r *http.Request) {
-
-	//filtro de url para categorias e clientes
-	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
-	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	posts, erro := repositorio.BuscarTodos(urlCategoria, urlCliente)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, posts)
-
-}
-
-// BuscarPostsPorString traz as publicações através de parametros informados na URL
-func BuscarPostsPorString(w http.ResponseWriter, r *http.Request) {
-
-	//filtro de url para categorias e clientes
-	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
-	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	posts, erro := repositorio.BuscarPorString(urlCategoria, urlCliente)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, posts)
-
-}
-
-// BuscarPostsPorStringCat traz as publicações através de parametros informados na URL
-func BuscarPostsPorStringCat(w http.ResponseWriter, r *http.Request) {
-	//filtro de url para categorias e clientes
-	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
-	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	posts, erro := repositorio.BuscarPorStringCat(urlCategoria, urlCliente)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, posts)
-
-}
-
-// BuscaPost faz a busca publicações utilizando uma palavra (search box)
-func BuscaPost(w http.ResponseWriter, r *http.Request) {
-
-	//filtro por palavras chaves
-	urlBusca := strings.ToLower(r.URL.Query().Get("busca"))
-	println(urlBusca)
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	posts, erro := repositorio.Busca(urlBusca)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, posts)
-
-}
-
-// BuscarPost retorna uma única publicação
-func BuscarPost(w http.ResponseWriter, r *http.Request) {
-	parametros := mux.Vars(r)
-	ID, erro := strconv.ParseUint(parametros["postId"], 10, 64)
-	if erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	post, erro := repositorio.BuscarPorID(ID)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, post)
 }
 
 // AtualizarPost altera os dados de uma publicação
@@ -209,12 +85,12 @@ func AtualizarPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//logger db
-	middlewares.LoggerOnDb(w, r, "Post atualizado: "+strconv.Itoa(int(post.IDPOST))+" "+post.TITULO)
+	middlewares.LoggerOnDb(w, r, "Post atualizado na base de conhecimento: ["+"IDPost: "+strconv.Itoa(int(postID))+" | "+"Titulo: "+post.TITULO+" | "+"IDCategoria: "+post.ID_CATEGORIA+" | "+"IDCliente: "+post.ID_CLIENTE+"]")
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// DeletarPost exclui uma publicação
+// DeletarPost exclui um post no banco de dados
 func DeletarPost(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
@@ -238,13 +114,17 @@ func DeletarPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//logger db
-	middlewares.LoggerOnDb(w, r, "Post deletado: "+strconv.Itoa(int(postID)))
+	middlewares.LoggerOnDb(w, r, "Post deletado na base de conhecimento: ["+"IDPost: "+strconv.Itoa(int(postID))+"]")
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// BuscarDadosCategorias traz as categorias armazenadas no banco de dados
-func BuscarDadosCategorias(w http.ResponseWriter, r *http.Request) {
+// BuscarTodosPosts traz todas os posts existentes no banco de dados.
+func BuscarTodosPosts(w http.ResponseWriter, r *http.Request) {
+
+	//filtro de url para categorias e clientes
+	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
+	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -254,20 +134,20 @@ func BuscarDadosCategorias(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDePosts(db)
-	categoria, erro := repositorio.BuscarCategoria()
+	posts, erro := repositorio.BuscarTodos(urlCategoria, urlCliente)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	respostas.JSON(w, http.StatusOK, categoria)
+	respostas.JSON(w, http.StatusOK, posts)
 
 }
 
-// BuscarCategoria traz uma categoria armazenadas no banco de dados através do ID.
-func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
+// BuscarPost retorna um único post
+func BuscarPost(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
-	ID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
+	ID, erro := strconv.ParseUint(parametros["postId"], 10, 64)
 	if erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -281,24 +161,45 @@ func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDePosts(db)
-	categoria, erro := repositorio.BuscarCategoriaPorID(ID)
+	post, erro := repositorio.BuscarPorID(ID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	respostas.JSON(w, http.StatusOK, categoria)
+	respostas.JSON(w, http.StatusOK, post)
+}
+
+// Searchbox traz um post filtrando por uma palavra chave
+func SearchBox(w http.ResponseWriter, r *http.Request) {
+
+	//filtro por palavras chaves
+	urlBusca := strings.ToLower(r.URL.Query().Get("busca"))
+	println(urlBusca)
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePosts(db)
+	posts, erro := repositorio.Busca(urlBusca)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, posts)
 
 }
 
-// AtualizarPost altera os dados de uma categoria
-func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
-	parametros := mux.Vars(r)
-	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
-	if erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
+// BuscarPostsPorString traz os posts filtrando pelos parametros informados na URL (Necessário refatorar)
+func SearchPostsPorString(w http.ResponseWriter, r *http.Request) {
+
+	//filtro de url para categorias e clientes
+	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
+	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -308,99 +209,21 @@ func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDePosts(db)
-	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
-	if erro != nil {
-		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
-		return
-	}
-
-	var cat modelos.Post_Categoria
-	if erro = json.Unmarshal(corpoRequisicao, &cat); erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
-
-	if erro = repositorio.AtualizarCategoria(catID, cat); erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	//logger db
-	middlewares.LoggerOnDb(w, r, "Categoria atualizada: "+strconv.Itoa(int(catID)))
-
-	respostas.JSON(w, http.StatusNoContent, nil)
-}
-
-// DeletarCategoria exclui uma categoria
-func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
-
-	parametros := mux.Vars(r)
-	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
-	if erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	if erro = repositorio.DeletarCategoria(catID); erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	//logger db
-	middlewares.LoggerOnDb(w, r, "Categoria Deletada: "+strconv.Itoa(int(catID)))
-
-	respostas.JSON(w, http.StatusNoContent, nil)
-}
-
-// BuscarCliente traz uma categoria armazenadas no banco de dados através do ID.
-func BuscarCliente(w http.ResponseWriter, r *http.Request) {
-	parametros := mux.Vars(r)
-	ID, erro := strconv.ParseUint(parametros["clienteId"], 10, 64)
-	if erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDePosts(db)
-	cliente, erro := repositorio.BuscarClientePorID(ID)
+	posts, erro := repositorio.BuscarPorString(urlCategoria, urlCliente)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	respostas.JSON(w, http.StatusOK, cliente)
+	respostas.JSON(w, http.StatusOK, posts)
 
 }
 
-// CriarCategoriaBase adiciona uma nova categoria no banco de dados
-func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
-
-	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
-	if erro != nil {
-		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
-		return
-	}
-
-	var cat modelos.Post_Categoria
-	if erro = json.Unmarshal(corpoRequisicao, &cat); erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
+// BuscarPostsPorStringCat traz os posts filtrando pelos parametros informados na URL (Necessário refatorar)
+func SearchPostsPorCategoria(w http.ResponseWriter, r *http.Request) {
+	//filtro de url para categorias e clientes
+	urlCategoria := strings.ToLower(r.URL.Query().Get("categoria"))
+	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -410,13 +233,12 @@ func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDePosts(db)
-	cat.IDCATEGORIA, erro = repositorio.CriarCategoria(cat)
+	posts, erro := repositorio.BuscarPorStringCat(urlCategoria, urlCliente)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	//logger db
-	middlewares.LoggerOnDb(w, r, "Categoria criada: "+strconv.Itoa(int(cat.IDCATEGORIA))+" "+cat.NOME)
 
-	respostas.JSON(w, http.StatusCreated, cat)
+	respostas.JSON(w, http.StatusOK, posts)
+
 }
