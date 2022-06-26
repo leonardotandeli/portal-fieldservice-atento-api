@@ -37,10 +37,10 @@ func main() {
 	// handler de rotas
 	handler := c.Handler(r)
 
-	// imprime as variaveis de ambiente no console
-	fmt.Printf("Executando na porta %d\n", config.Porta)
-	fmt.Printf("Front-end: %s\n", os.Getenv("FRONTEND_URL"))
-	fmt.Printf("Banco de dados: %s\n", os.Getenv("DB_NOME"))
+	// imprime informações de ambiente no console
+	fmt.Printf("API Executando na porta %d\n", config.Porta)
+	fmt.Printf("URL definida como Front-end: %s\n", os.Getenv("FRONTEND_URL"))
+	fmt.Printf("Nome do Banco de dados: %s\n", os.Getenv("DB_NOME"))
 
 	// inicia o servidor http
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Porta), handler))
