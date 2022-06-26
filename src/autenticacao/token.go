@@ -40,7 +40,7 @@ func ValidarToken(r *http.Request) error {
 		return nil
 	}
 
-	return errors.New("TOKEN INVÁLIDO")
+	return errors.New("Token não está válido!")
 }
 
 // ExtrairUsuarioID extrai o dados do usuário e valida o token.
@@ -60,7 +60,7 @@ func ExtrairUsuarioID(r *http.Request) (uint64, error) {
 		return usuarioID, nil
 	}
 
-	return 0, errors.New("TOKEN INVÁLIDO")
+	return 0, errors.New("Token não está válido!")
 }
 
 // ExtrairUsuarioID extrai o dados do token.
@@ -77,7 +77,7 @@ func extrairToken(r *http.Request) string {
 // ExtrairUsuarioID retorna a chave de verificação do token
 func retornarChaveDeVerificacao(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, fmt.Errorf("MÉTODO DE ASSINATURA INESPERADO! %v", token.Header["alg"])
+		return nil, fmt.Errorf("Método de assinatura inesperado. %v", token.Header["alg"])
 	}
 
 	return config.SecretKey, nil
