@@ -56,4 +56,16 @@ var rotasBaseConhecimento = []Rota{
 		Funcao:             controllers.BuscarPost,
 		RequerAutenticacao: true,
 	},
+	{
+		URI:                "/ad/{login}",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.ConsultaAD,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/laps/{locador}",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.ConsultaLAPS,
+		RequerAutenticacao: true,
+	},
 }

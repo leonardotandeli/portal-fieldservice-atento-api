@@ -51,6 +51,7 @@ func ConsultaLAPS(w http.ResponseWriter, r *http.Request) {
 		senhaWithoutSpace = "Nenhuma senha encontrada"
 	}
 
+	fmt.Println()
 	respostas.JSON(w, http.StatusOK, modelos.DadosLAPS{SENHA: senhaWithoutSpace})
 
 }
