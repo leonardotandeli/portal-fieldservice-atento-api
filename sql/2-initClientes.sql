@@ -87,4 +87,7 @@ INSERT INTO CLIENTES (IDCLIENTE, NOME, LOGO_URL) VALUES
 	(89, 'UNIMED', '/assets/images/icons_clientes/unimed.jpg'),
 	(91, 'UNIMED PORTO ALEGRE', '/assets/images/icons_clientes/unimedpoa.jpg'),
 	(92, '3M', '/assets/images/icons_clientes/3m.jpg'),
-	(93, 'JCA', '/assets/images/icons_clientes/jca.jpg');
+	(93, 'JCA', '/assets/images/icons_clientes/jca.jpg'),
+	(94, 'CVC', '/assets/images/icons_clientes/cvc.jpg'),
+	(95, 'PASA', '/assets/images/icons_clientes/pasa.jpg'),
+	(96, 'FACILY', '/assets/images/icons_clientes/facily.jpg');
