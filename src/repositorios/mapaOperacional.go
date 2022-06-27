@@ -180,7 +180,7 @@ func (repositorio MapasOperacional) BuscarSites() ([]modelos.Site, error) {
 		MapasSite = append(MapasSite, mapa_site)
 	}
 
-	return MapasSite, nil
+	return MapasSite[1:38], nil
 
 }
 
