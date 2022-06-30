@@ -8,7 +8,6 @@ import (
 	"api/src/respostas"
 	"api/src/seguranca"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -54,7 +53,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	fmt.Println(usuarioSalvoNoBanco.LOGIN_NT)
 
 	//logger db
 	var logs modelos.Logs
@@ -66,6 +64,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	repositorioLogs := repositorios.NovoRepositorioDeLogs(db)
 	logs.Usuario.IDUSUARIO, erro = repositorioLogs.LoggerDB(logs)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	// Session
+	var session modelos.Session
+	session.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
+	session.DadosAutenticacao.Token = token
+	session.DATA = time.Now()
+
+	repositorioSession := repositorios.NovoRepositorioDeLogs(db)
+	logs.Usuario.IDUSUARIO, erro = repositorioSession.SessionCreate(session)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return

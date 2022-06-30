@@ -180,6 +180,7 @@ func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respostas.JSON(w, http.StatusOK, usuarios)
+
 }
 
 // BuscarUsuario busca um usuário salvo no banco

@@ -1,7 +1,10 @@
 package autenticacao
 
 import (
+	"api/src/banco"
 	"api/src/config"
+	"api/src/repositorios"
+
 	"api/src/modelos"
 	"errors"
 	"fmt"
@@ -40,6 +43,31 @@ func ValidarToken(r *http.Request) error {
 		return nil
 	}
 
+	return errors.New("Token não está válido!")
+}
+
+//SessionDB escreve informações no banco de dados.
+func SessionDB(r *http.Request) error {
+	var session modelos.Session
+	session.Usuario.IDUSUARIO = ExtrairDadosUsuario(r).Usuario.IDUSUARIO
+	fmt.Println("user")
+	fmt.Println(session.Usuario.IDUSUARIO)
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		return erro
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeLogs(db)
+	sessionArmazenadaDB, erro := repositorio.BuscarPorID(session.Usuario.IDUSUARIO)
+	if erro != nil {
+		return erro
+	}
+
+	if session.Usuario.IDUSUARIO == sessionArmazenadaDB.Usuario.IDUSUARIO {
+		return nil
+	}
 	return errors.New("Token não está válido!")
 }
 
