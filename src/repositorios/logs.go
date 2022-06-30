@@ -88,3 +88,90 @@ func (repositorio Logs) BuscarPorID(ID uint64) (modelos.Session, error) {
 
 	return session, nil
 }
+
+// Deletar exclui uma publicação do banco de dados
+func (repositorio Logs) DeletarSession(ID uint64) error {
+	statement, erro := repositorio.db.Prepare("DELETE FROM SESSIONS WHERE ID = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(ID); erro != nil {
+		return erro
+	}
+
+	return nil
+}
+
+// BuscarPorID traz um usuário do banco de dados filtrado pelo id
+func (repositorio Logs) CronDeleteSession(ID uint64) error {
+
+	statement, erro := repositorio.db.Prepare("DELETE FROM SESSIONS WHERE ID = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(ID); erro != nil {
+		return erro
+	}
+
+	return nil
+
+}
+func (repositorio Logs) BuscarPorDATA(data string) (modelos.Session, error) {
+
+	fmt.Println(data)
+	linhas, erro := repositorio.db.Query(
+		"SELECT ID, ID_USUARIO, TOKEN, DATA FROM SESSIONS WHERE DATA = ?", data)
+	if erro != nil {
+		return modelos.Session{}, erro
+	}
+	defer linhas.Close()
+
+	var session modelos.Session
+
+	if linhas.Next() {
+		if erro = linhas.Scan(
+			&session.ID,
+			&session.Usuario.IDUSUARIO,
+			&session.DadosAutenticacao.Token,
+			&session.DATA,
+		); erro != nil {
+			return modelos.Session{}, erro
+		}
+	}
+
+	return session, nil
+}
+
+func (repositorio Logs) BuscaGeral() ([]modelos.Session, error) {
+
+	linhas, erro := repositorio.db.Query(
+
+		"SELECT ID, ID_USUARIO, TOKEN, DATA FROM SESSIONS")
+
+	if erro != nil {
+		return nil, erro
+	}
+	defer linhas.Close()
+
+	var Sessions []modelos.Session
+	for linhas.Next() {
+		var session modelos.Session
+
+		if erro = linhas.Scan(
+			&session.ID,
+			&session.Usuario.IDUSUARIO,
+			&session.DadosAutenticacao.Token,
+			&session.DATA,
+		); erro != nil {
+			return nil, erro
+		}
+
+		Sessions = append(Sessions, session)
+	}
+
+	return Sessions, nil
+}

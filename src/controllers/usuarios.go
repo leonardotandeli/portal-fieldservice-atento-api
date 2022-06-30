@@ -209,3 +209,32 @@ func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	respostas.JSON(w, http.StatusOK, usuario)
 }
+
+func DeletarSessionDB(w http.ResponseWriter, r *http.Request) {
+
+	parametros := mux.Vars(r)
+	userID, erro := strconv.ParseUint(parametros["userId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorioD := repositorios.NovoRepositorioDeLogs(db)
+	sessionArmazenadaDB, erro := repositorioD.BuscarPorID(userID)
+	if erro != nil {
+		return
+	}
+
+	repositorio := repositorios.NovoRepositorioDeLogs(db)
+	if erro = repositorio.DeletarSession(sessionArmazenadaDB.ID); erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+}
