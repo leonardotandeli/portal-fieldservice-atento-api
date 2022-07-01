@@ -75,7 +75,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	session.DadosAutenticacao.Token = token
 	session.DATA = time.Now()
 
-	repositorioSession := repositorios.NovoRepositorioDeLogs(db)
 	logs.Usuario.IDUSUARIO, erro = repositorioSession.SessionCreate(session)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)

@@ -210,6 +210,7 @@ func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusOK, usuario)
 }
 
+// DeletarSessionDB deleta a sessão armazenada no banco
 func DeletarSessionDB(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
@@ -226,13 +227,13 @@ func DeletarSessionDB(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorioD := repositorios.NovoRepositorioDeLogs(db)
+	repositorioD := repositorios.NovoRepositorioDeSessions(db)
 	sessionArmazenadaDB, erro := repositorioD.BuscarPorID(userID)
 	if erro != nil {
 		return
 	}
 
-	repositorio := repositorios.NovoRepositorioDeLogs(db)
+	repositorio := repositorios.NovoRepositorioDeSessions(db)
 	if erro = repositorio.DeletarSession(sessionArmazenadaDB.ID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return

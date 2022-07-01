@@ -19,9 +19,8 @@ func SessionGetAllDB(r *http.Request) error {
 	}
 	defer db.Close()
 
-	repositorios1 := repositorios.NovoRepositorioDeLogs(db)
-	sessionArmazenadaDB, erro := repositorios1.BuscaGeral()
-	if erro != nil {
+	repositorio := repositorios.NovoRepositorioDeSessions(db)
+	if erro = repositorio.CronDeletarSessionApos12Horas(); erro != nil {
 		return erro
 	}
 
