@@ -47,7 +47,7 @@ func CriarOperacaoMapa(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusCreated, mapa)
 }
 
-// AtualizarDadosMapa altera os dados de uma operação
+// AtualizarOperacaoMapa altera os dados de uma operação
 func AtualizarOperacaoMapa(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	mapaID, erro := strconv.ParseUint(parametros["mapaId"], 10, 64)
@@ -88,7 +88,7 @@ func AtualizarOperacaoMapa(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// DeletarDadosMapa exclui os dados de uma operação
+// DeletarOperacaoMapa exclui os dados de uma operação
 func DeletarOperacaoMapa(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
@@ -117,7 +117,7 @@ func DeletarOperacaoMapa(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// BuscarDadosMapa traz as operacoes armazenadas no banco de dados
+// BuscarOperacoesMapa traz as operacoes armazenadas no banco de dados
 func BuscarOperacoesMapa(w http.ResponseWriter, r *http.Request) {
 
 	urlSite := strings.ToLower(r.URL.Query().Get("site"))
@@ -140,7 +140,7 @@ func BuscarOperacoesMapa(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarDadosMapaString traz as operacoes armazenadas no banco de dados através de parametros informados na URL
+// SearchOperacoesMapa traz as operacoes armazenadas no banco de dados através de parametros informados na URL
 func SearchOperacoesMapa(w http.ResponseWriter, r *http.Request) {
 
 	urlSite := strings.ToLower(r.URL.Query().Get("site"))
@@ -163,7 +163,7 @@ func SearchOperacoesMapa(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarDadoMapa retorna uma única publicação
+// BuscarOperacaoMapa retorna uma única publicação
 func BuscarOperacaoMapa(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["mapaId"], 10, 64)

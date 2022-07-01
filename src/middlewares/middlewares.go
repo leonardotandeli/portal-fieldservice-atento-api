@@ -22,15 +22,24 @@ func Logger(proximaFuncao http.HandlerFunc) http.HandlerFunc {
 // Autenticar verifica se o usuário fazendo a requisição está autenticado
 func Autenticar(proximaFuncao http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		//Valida token
 		if erro := autenticacao.ValidarToken(r); erro != nil {
+
 			respostas.Erro(w, http.StatusUnauthorized, erro)
 			return
 		}
+		//valida sessão no banco de dados
+		if erro := autenticacao.SessionDB(r); erro != nil {
+
+			respostas.Erro(w, http.StatusUnauthorized, erro)
+			return
+		}
+
 		proximaFuncao(w, r)
 	}
 }
 
-//LoggerOnDb escreve informações da requisições POST, PUT e DELETE no banco de dados.
+//LoggerOnDb escreve informações da requisições no banco de dados.
 func LoggerOnDb(w http.ResponseWriter, r *http.Request, ACTION string) {
 
 	//logger

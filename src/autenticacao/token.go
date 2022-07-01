@@ -1,7 +1,10 @@
 package autenticacao
 
 import (
+	"api/src/banco"
 	"api/src/config"
+	"api/src/repositorios"
+
 	"api/src/modelos"
 	"errors"
 	"fmt"
@@ -12,6 +15,8 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v4"
 )
+
+//var hmacSampleSecret []byte
 
 // CriarToken retorna um token assinado com os dados do usuário
 func CriarToken(usuarioID uint64, LOGIN_NT string, NOME string) (string, error) {
@@ -24,8 +29,6 @@ func CriarToken(usuarioID uint64, LOGIN_NT string, NOME string) (string, error) 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
 	return token.SignedString([]byte(config.SecretKey))
 }
-
-var hmacSampleSecret []byte
 
 // ValidarToken verifica se o token passado na requisição é valido
 func ValidarToken(r *http.Request) error {
@@ -40,7 +43,30 @@ func ValidarToken(r *http.Request) error {
 		return nil
 	}
 
-	return errors.New("Token não está válido!")
+	return errors.New("TOKEN NÃO ESTÁ VÁLIDO")
+}
+
+//SessionDB escreve informações da sessão no banco de dados.
+func SessionDB(r *http.Request) error {
+	var session modelos.Session
+	session.Usuario.IDUSUARIO = ExtrairDadosUsuario(r).Usuario.IDUSUARIO
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		return erro
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeSessions(db)
+	sessionArmazenadaDB, erro := repositorio.BuscarPorID(session.Usuario.IDUSUARIO)
+	if erro != nil {
+		return erro
+	}
+
+	if session.Usuario.IDUSUARIO == sessionArmazenadaDB.Usuario.IDUSUARIO {
+		return erro
+	}
+	return errors.New("TOKEN NÃO ESTÁ VÁLIDO")
 }
 
 // ExtrairUsuarioID extrai o dados do usuário e valida o token.
@@ -60,10 +86,10 @@ func ExtrairUsuarioID(r *http.Request) (uint64, error) {
 		return usuarioID, nil
 	}
 
-	return 0, errors.New("Token não está válido!")
+	return 0, errors.New("TOKEN NÃO ESTÁ VÁLIDO")
 }
 
-// ExtrairUsuarioID extrai o dados do token.
+// extrairToken extrai o dados do token.
 func extrairToken(r *http.Request) string {
 	token := r.Header.Get("Authorization")
 
@@ -74,16 +100,16 @@ func extrairToken(r *http.Request) string {
 	return ""
 }
 
-// ExtrairUsuarioID retorna a chave de verificação do token
+// retornarChaveDeVerificacao retorna a chave de verificação do token
 func retornarChaveDeVerificacao(token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, fmt.Errorf("Método de assinatura inesperado. %v", token.Header["alg"])
+		return nil, fmt.Errorf("MÉTODO DE ASSINATURA INESPERADO. %v", token.Header["alg"])
 	}
 
 	return config.SecretKey, nil
 }
 
-// ExtrairUsuarioID extrai o dados do usuário e valida o token.
+// ExtrairUsuarioUsuario extrai o dados do usuário e valida o token.
 func ExtrairDadosUsuario(r *http.Request) (user modelos.Logs) {
 	tokenString := extrairToken(r)
 	token, erro := jwt.Parse(tokenString, retornarChaveDeVerificacao)

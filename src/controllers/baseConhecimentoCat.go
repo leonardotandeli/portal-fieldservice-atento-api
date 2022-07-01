@@ -49,7 +49,7 @@ func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusCreated, cat)
 }
 
-// AtualizarPost altera os dados de uma categoria
+// AtualizarCategoria altera os dados de uma categoria
 func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)

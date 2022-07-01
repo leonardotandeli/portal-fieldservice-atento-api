@@ -2,6 +2,7 @@ package main
 
 import (
 	"api/src/config"
+	"api/src/cron"
 	"api/src/router"
 	"fmt"
 	"log"
@@ -41,6 +42,9 @@ func main() {
 	fmt.Printf("API Executando na porta %d\n", config.Porta)
 	fmt.Printf("URL definida como Front-end: %s\n", os.Getenv("FRONTEND_URL"))
 	fmt.Printf("Nome do Banco de dados: %s\n", os.Getenv("DB_NOME"))
+
+	//inicia as tarefas
+	go cron.Tarefas()
 
 	// inicia o servidor http
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Porta), handler))

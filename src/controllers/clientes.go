@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// BuscarCliente traz uma categoria armazenadas no banco de dados através do ID.
+// BuscarCliente traz um cliente armazenadas no banco de dados através do ID.
 func BuscarCliente(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["clienteId"], 10, 64)
