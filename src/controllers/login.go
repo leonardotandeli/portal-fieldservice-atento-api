@@ -54,7 +54,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//logger db
+	//logger db - inclui um log no banco ao realizar o login
 	var logs modelos.Logs
 	logs.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
 	logs.Usuario.LOGIN_NT = usuarioSalvoNoBanco.LOGIN_NT
@@ -69,12 +69,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Session
+	// Session db - inclui uma sessão no banco ao realizar o login
 	var session modelos.Session
 	session.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
 	session.DadosAutenticacao.Token = token
 	session.DATA = time.Now()
 
+	repositorioSession := repositorios.NovoRepositorioDeSessions(db)
 	logs.Usuario.IDUSUARIO, erro = repositorioSession.SessionCreate(session)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
