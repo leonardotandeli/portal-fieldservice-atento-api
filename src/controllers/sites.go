@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// BuscarDadosSite traz os sites armazenados no banco de dados
+// BuscarSites traz os sites armazenados no banco de dados
 func BuscarSites(w http.ResponseWriter, r *http.Request) {
 
 	db, erro := banco.Conectar()
