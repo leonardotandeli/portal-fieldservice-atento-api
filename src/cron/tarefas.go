@@ -2,16 +2,14 @@ package cron
 
 import (
 	"api/src/banco"
-	"api/src/modelos"
 	"api/src/repositorios"
-	"fmt"
 	"net/http"
 
 	"github.com/jasonlvhit/gocron"
 )
 
-//SessionDB escreve informações no banco de dados.
-func SessionGetAllDB(r *http.Request) error {
+//SessionDelete deleta as sessões com mais de 12 horas no banco de dados...
+func SessionDelete(r *http.Request) error {
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -24,46 +22,20 @@ func SessionGetAllDB(r *http.Request) error {
 		return erro
 	}
 
-	var session modelos.Session
-	sessionArmazenadaDB = append(sessionArmazenadaDB, session)
-
-	//	d := sessionArmazenadaDB.DATA.Unix()      // 85
-	//	d2 := sessionArmazenadaDB.DATA.Unix() + 5 // 90
-
-	fmt.Println(sessionArmazenadaDB)
-
-	//	if d >= d2 {
-	//		fmt.Println("delete")
-	//		fmt.Println(sessionArmazenadaDB.ID)
-	//		repositorio := repositorios.NovoRepositorioDeLogs(db)
-	//		repositorio.CronDeleteSession(sessionArmazenadaDB.ID)
-	//		if erro != nil {
-	//			return erro
-	//		}
-	//	}
-	////////////////////////
-	/*
-
-
-		//if sessionArmazenadaDB.DATA > sessionArmazenadaDB.DATA {
-		//		return errors.New("Token não está válido!")
-		//	}
-		return errors.New("Token não está válido!")
-	*/
-
 	return erro
 }
 
-func taskRemoveSession() {
-	fmt.Println("Task is being performed.")
-	SessionGetAllDB(&http.Request{})
+//task chama a função que deleta as sessões do banco de dados.
+func task() {
+	//fmt.Println("Tarefa sendo executada")
+	SessionDelete(&http.Request{})
 }
 
-func RemoveSession() {
+//Tarefas executa as tarefas a cada 1 minuto
+func Tarefas() {
+	// executa as tarefas a cada 1 minuto
+	gocron.Every(1).Minute().Do(task)
 
-	// Do jobs without params
-	gocron.Every(2).Second().Do(taskRemoveSession)
-
-	// Start all the pending jobs
+	// inicia todos as tarefas pendentes
 	<-gocron.Start()
 }
