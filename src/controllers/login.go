@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // Login é responsável por autenticar um usuário na API
@@ -47,7 +48,35 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.IDUSUARIO)
+	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.IDUSUARIO, usuarioSalvoNoBanco.LOGIN_NT, usuarioSalvoNoBanco.NOME)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	//logger db - inclui um log no banco ao realizar o login
+	var logs modelos.Logs
+	logs.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
+	logs.Usuario.LOGIN_NT = usuarioSalvoNoBanco.LOGIN_NT
+	logs.Usuario.NOME = usuarioSalvoNoBanco.NOME
+	logs.DATA = time.Now()
+	logs.ACTION = "Login Efetuado"
+
+	repositorioLogs := repositorios.NovoRepositorioDeLogs(db)
+	logs.Usuario.IDUSUARIO, erro = repositorioLogs.LoggerDB(logs)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	// Session db - inclui uma sessão no banco ao realizar o login
+	var session modelos.Session
+	session.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
+	session.DadosAutenticacao.Token = token
+	session.DATA = time.Now()
+
+	repositorioSession := repositorios.NovoRepositorioDeSessions(db)
+	logs.Usuario.IDUSUARIO, erro = repositorioSession.SessionCreate(session)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return

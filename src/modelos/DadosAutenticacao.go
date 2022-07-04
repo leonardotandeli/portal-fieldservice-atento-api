@@ -18,4 +18,5 @@ type DadosAutenticacao struct {
 	V_MAPA_OPERACIONAL     string `json:"v_mapa_operacional,omitempty"`
 	V_MAPA_OPERACIONAL_ADM string `json:"v_mapa_operacional_adm,omitempty"`
 	Site                   Site
+	STATUS                 string `json:"status,omitempty"`
 }

@@ -4,33 +4,7 @@ import (
 	"time"
 )
 
-// Dominio representa os domínios cadastrados no sistema
-type Dominio struct {
-	IDDOMINIO uint64 `json:"iddominio,omitempty"`
-	NOME      string `json:"nome,omitempty"`
-}
-
-// DAC representa um dac cadastrado em sistema
-type Dac struct {
-	IDDAC uint64 `json:"iddac,omitempty"`
-	NOME  string `json:"nome,omitempty"`
-}
-
-// Cliente representa um cliente cadastrado em sistema
-type Cliente struct {
-	IDCLIENTE uint64 `json:"idcliente,omitempty"`
-	NOME      string `json:"nome,omitempty"`
-	LOGO_URL  string `json:"logo_url,omitempty"`
-}
-
-// Site representa os sites cadastrados no sistema
-type Site struct {
-	IDSITE     uint64 `json:"idsite,omitempty"`
-	NOME       string `json:"nome,omitempty"`
-	ID_USUARIO string `json:"id_usuario,omitempty"`
-}
-
-// MapaOperacional representa as operações cadastrados no sistema
+// MapaOperacional representa uma operação cadastrada no sistema
 type MapaOperacional struct {
 	IDMAPA            uint64    `json:"idmapa,omitempty"`
 	OPERACAO          string    `json:"operacao,omitempty"`

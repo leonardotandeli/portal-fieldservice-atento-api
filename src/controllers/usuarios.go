@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"api/src/banco"
+	"api/src/middlewares"
 	"api/src/modelos"
 	"api/src/repositorios"
 	"api/src/respostas"
@@ -47,54 +48,10 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Usuário criado no sistema: ["+"IDUsuario: "+strconv.Itoa(int(usuario.IDUSUARIO))+" | "+"Login NT: "+usuario.LOGIN_NT+" | "+"Nome: "+usuario.NOME+"]")
+
 	respostas.JSON(w, http.StatusCreated, usuario)
-}
-
-// BuscarUsuarios busca todos os usuários salvos no banco
-func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
-	nomeOuNick := strings.ToLower(r.URL.Query().Get("usuario"))
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
-	usuarios, erro := repositorio.Buscar(nomeOuNick)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, usuarios)
-}
-
-// BuscarUsuario busca um usuário salvo no banco
-func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
-	parametros := mux.Vars(r)
-
-	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
-	if erro != nil {
-		respostas.Erro(w, http.StatusBadRequest, erro)
-		return
-	}
-
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
-	usuario, erro := repositorio.BuscarPorID(usuarioID)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, usuario)
 }
 
 // AtualizarUsuario altera as informações de um usuário no banco
@@ -130,6 +87,9 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Usuário atualizado no sistema: ["+"IDUsuario: "+strconv.Itoa(int(usuario.IDUSUARIO))+" | "+"Login NT: "+usuario.LOGIN_NT+" | "+"Nome: "+usuario.NOME+"]")
+
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
@@ -153,6 +113,9 @@ func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Usuário deletado no sistema: ["+"IDUsuario: "+strconv.Itoa(int(usuarioID))+"]")
 
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
@@ -193,6 +156,56 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+	//logger db
+	middlewares.LoggerOnDb(w, r, "Usuário teve a senha alterada no sistema: ["+"IDUsuario: "+strconv.Itoa(int(usuarioID))+"]")
 
 	respostas.JSON(w, http.StatusNoContent, nil)
+}
+
+// BuscarUsuarios busca todos os usuários salvos no banco
+func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
+	nomeOuNick := strings.ToLower(r.URL.Query().Get("usuario"))
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
+	usuarios, erro := repositorio.Buscar(nomeOuNick)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, usuarios)
+
+}
+
+// BuscarUsuario busca um usuário salvo no banco
+func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
+	usuario, erro := repositorio.BuscarPorID(usuarioID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, usuario)
 }

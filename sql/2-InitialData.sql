@@ -87,4 +87,87 @@ INSERT INTO CLIENTES (IDCLIENTE, NOME, LOGO_URL) VALUES
 	(89, 'UNIMED', '/assets/images/icons_clientes/unimed.jpg'),
 	(91, 'UNIMED PORTO ALEGRE', '/assets/images/icons_clientes/unimedpoa.jpg'),
 	(92, '3M', '/assets/images/icons_clientes/3m.jpg'),
-	(93, 'JCA', '/assets/images/icons_clientes/jca.jpg');
+	(93, 'JCA', '/assets/images/icons_clientes/jca.jpg'),
+	(94, 'CVC', '/assets/images/icons_clientes/cvc.jpg'),
+	(95, 'PASA', '/assets/images/icons_clientes/pasa.jpg'),
+	(96, 'FACILY', '/assets/images/icons_clientes/facily.jpg');
+
+
+
+INSERT INTO SITES (IDSITE, NOME, SIGLA, UF, ENDERECO) VALUES
+
+	(1, 'GERAL', 'N/A', 'N/A', 'N/A'),
+	(2, 'INTERFILE', 'ITF', 'SP', 'Av Paulo Ayres,40, Parque Pinheiros, Taboão da Serra'),
+	(3, 'NOVA SEDE', 'MAT', 'SP', 'Rua Paul Valery, 255, Chácara Santo Antônio São Paulo 04719-909'),
+	(4, 'BELO HORIZONTE PRADO', 'BHP', 'MG', 'Rua Jaceguai, 220, Prado, Belo Horizonte/MG, CEP: 30411-040'),
+	(5, 'CABULA', 'CBL', 'BA', 'Rua Silveira Martins, 1036, Cabula, Salvador/BA, CEP: 41150-000'),
+	(6, 'CAMPO GRANDE', 'CPG', 'RJ', 'Rua Campo Grande, 120, Campo Grande, Rio de Janeiro/RJ, CEP: 23085-360'),
+	(7, 'CASA', 'CSA', 'SP', 'Av. Alfredo Egidio de Souza Aranha, 100 Vila Cruzeiro, São Paulo/SP, CEP. 04726-170'),
+	(8, 'CIDADE NOVA', 'CDN', 'RJ', 'Rua Pinto de Azevedo, 105, Cidade Nova Rio de Janeiro/RJ, CEP: 20211-445'),
+	(9, 'DEL CASTILHO', 'DLC', 'RJ', 'Av. Dom Helder Camara, 3203, Maria da Graça, Rio de Janeiro/RJ, CEP: 21050-454'),
+	(10, 'FEIRA DE SANTANA', 'FSA', 'BA', 'Pc Carlos Bahia, 19, Centro, Feira de Santana/BA, CEP: 44002-772'),
+	(11, 'GOIANIA', 'GOI', 'GO', 'Rua 11; n°250; 14 andar – Edifício Corporate Centro – Goiânia GO Centro – Goiânia GO'),
+	(12, 'GUARULHOS', 'GRU', 'SP', 'Av. Guarulhos, 3384, Ponte Grande, Guarulhos/SP, CEP. 07030-001'),
+	(13, 'LIBERDADE', 'LBD', 'SP', 'Rua Barão de Iguape, 110, Liberdade, São Paulo/SP, CEP: 01507-000'),
+	(14, 'MADUREIRA', 'MDR', 'RJ', 'Rua Dona Clara, 118, Madureira, Rio de Janeiro/RJ, CEP: 21310-030'),
+	(15, 'NOVA SÃO PAULO', 'NSP', 'SP', 'Rua Professor Manoelito de Ornellas, 303, Chácara Santo Antônio, São Paulo/SP, CEP: 04719-040'),
+	(16, 'OLIVEIRA COUTINHO ', 'OLC', 'SP', 'Rua José de Oliveira Coutinho, 73,  Parque Industrial Tomas Edson, São Paulo/SP, CEP. 01144-020'),
+	(17, 'PENHA', 'PEN', 'RJ', 'Av. Lobo Junior, 1825,  Penha Circular, Rio de Janeiro, RJ, CEP: 21020-123'),
+	(18, 'PORTO ALEGRE', 'POA', 'RS', 'Av. Júlio de Castilhos, 505, 10º andar, Centro, Porto Alegre/RS, CEP: 90030-131'),
+	(19, 'REPÚBLICA', 'REP', 'SP', 'Praça da República, 295  São Paulo/SP, CEP: 01045-001'),
+	(20, 'NOVA SÃO PAULO 2', 'NS2', 'SP', 'Avenida João Carlos da Silva Borges, 1240, Vila Cruzeiro - São Paulo -SP CEP 4726002'),
+	(21, 'SANTANA', 'STN', 'SP', 'Rua Voluntários da Pátria, 300, Santana, São Paulo/SP, CEP: 02010-000'),
+	(22, 'SANTO ANDRÉ', 'SAE', 'SP', 'Av. Dom Pedro I, 530, Vila América, Santo André/SP, CEP: 09110-000'),
+	(23, 'SANTO ANTONIO', 'STO', 'SP', 'Rua Domingos Marchetti, 77, Jardim Pereira Leite, São Paulo/SP, CEP: 02712-150'),
+	(24, 'SÃO BENTO I', 'SBE', 'SP', 'Rua Líbero Badaró, 633, Sé, São Paulo/SP, CEP: 01009-000'),
+	(25, 'SÃO BENTO II', 'SBT', 'SP', 'Largo São Bento, 64, Centro, São Paulo/SP, CEP: 01029-900'),
+	(26, 'SÃO BERNARDO DO CAMPO', 'SB1', 'SP', 'Av. Wallace Simonsen, 13, Nova Petropolis, São Bernardo do Campo/SP, CEP: 09771-210'),
+	(27, 'SÃO CAETANO DO SUL', 'SCS', 'SP', 'Rua Serafim Constantino, 100, e 136, Centro, São Caetano do Sul/SP,  CEP: 09510-220'),
+	(28, 'SÃO JOSÉ DOS CAMPOS', 'SJC', 'SP', 'Av. Andrômeda, 227, Jardim Satélite - São José dos Campos/SP, CEP: 12230-000'),
+	(29, 'TELEPORTO', 'TLP', 'RJ', 'Av. Presidente Vargas, 3.131, Centro, Rio de Janeiro/RJ, CEP: 20210-030'),
+	(30, 'URUGUAI', 'URU', 'BA', 'Rua do Uruguai, 53, Uruguai, Salvador/BA, CEP: 40450-211'),
+	(31, 'ZONA SUL', 'ZSU', 'SP', 'Avenida das Nações Unidas, nº 19.847, Vila Almeida, São Paulo/ SP, CEP: 04795-100'),
+	(32, 'ZONA LESTE', 'ZL', 'SP', 'AV. Jean farah, s/n, Lote H, Vila Carmosina, São Paulo/SP CEP 8295015'),
+	(33, 'ALMOX.INFRAESTRUTURA', 'GLP', 'SP', 'Av. Batalha do Pirajá, 156 - Lapa de Baixo');
+
+
+INSERT INTO DOMINIOS (IDDOMINIO, NOME) VALUES
+	(1, 'ATENTOBR'),
+	(2, 'ACIELO'),
+	(3, 'AFACEBOOKBR'),
+	(4, 'APOIOCASASBAHIA'),
+	(5, 'ICATU-ATENTO'),
+	(6, 'ARENNERBR'),
+	(7, 'ITAUATENTOBR'),
+	(8, 'AINTERMEDICA'),
+	(9, 'CLIENTEAPBR'),
+	(10, 'RECOVERYBR');
+
+INSERT INTO DACS (IDDAC, NOME) VALUES
+	(1, 'CLIENTE'),
+	(2, 'AVAYA CLOUD'),
+	(3, 'BLZ A/ 0*25/ 10.189.0.9192'),
+	(4, 'BLZ B / 0*28 / 10.189.0.90'),
+	(5, 'BLZ C / 0*35 / 10.189.0.93'),
+	(6, 'CAB / 0*71 / 10.181.0.90'),
+	(7, 'GOI / 0*62 / 10.157.0.90'),
+	(8, 'PEN A / 0*20 / 10.191.0.90'),
+	(9, 'PEN B / 0*21 / 10.191.0.91'),
+	(10, 'POA / 0*51 / 10.7.0.90'),
+	(11, 'PRD / 0*31 / 10.141.0.90'),
+	(12, 'RP / 0*16 / 10.10.0.90'),
+	(13, 'SBC / 0*15 / 10.2.0.90'),
+	(14, 'SBE A / 0*17 / 10.155.2.90'),
+	(15, 'SBE B / 0*27 / 10.155.0.92'),
+	(16, 'SBE C / 0*37'),
+	(17, 'SBE D / 0*18 / 10.155.0.93'),
+	(18, 'SBE E / 0*19 / 10.155.2.91'),
+	(19, 'SJC / 0*12 / 10.4.0.90');
+
+-- --------------------------------------------------------
+-- Usuário inicial
+-- Login NT: adm
+-- Senha: adm
+-- --------------------------------------------------------
+INSERT INTO USUARIOS (IDUSUARIO, NOME, LOGIN_NT, RE, CARGO, EMAIL, SENHA, V_USUARIOS, V_BDC_POSTS, V_BDC_ADM, V_IMDB, V_GSA, V_MAPA_OPERACIONAL, V_MAPA_OPERACIONAL_ADM, ID_SITE, STATUS, DATA_CRIACAO) VALUES
+	(1, 'ADM', 'adm', '1111111', 'ADM', 'adm@atento.com.br', '$2a$10$qBilPcTghY3kr3p1llu9SeEA3xH4sMkXidTYkAtyfTkCdmO50YlLq', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 24, 'ATIVO', '2022-03-21 00:28:09');
