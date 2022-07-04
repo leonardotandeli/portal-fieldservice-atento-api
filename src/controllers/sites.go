@@ -17,7 +17,7 @@ func BuscarSites(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeMapasOperacional(db)
+	repositorio := repositorios.NovoRepositorioDeSites(db)
 	mapa, erro := repositorio.BuscarSites()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)

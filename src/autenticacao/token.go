@@ -16,8 +16,6 @@ import (
 	jwt "github.com/golang-jwt/jwt/v4"
 )
 
-//var hmacSampleSecret []byte
-
 // CriarToken retorna um token assinado com os dados do usuário
 func CriarToken(usuarioID uint64, LOGIN_NT string, NOME string) (string, error) {
 	permissoes := jwt.MapClaims{}

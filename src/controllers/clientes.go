@@ -26,7 +26,7 @@ func BuscarCliente(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDePosts(db)
+	repositorio := repositorios.NovoRepositorioDeClientes(db)
 	cliente, erro := repositorio.BuscarClientePorID(ID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -46,7 +46,7 @@ func BuscarDadosCliente(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeMapasOperacional(db)
+	repositorio := repositorios.NovoRepositorioDeClientes(db)
 	mapa, erro := repositorio.BuscarClientes()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)

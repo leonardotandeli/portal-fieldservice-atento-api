@@ -17,7 +17,7 @@ func BuscarDadosDominios(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeMapasOperacional(db)
+	repositorio := repositorios.NovoRepositorioDeDominios(db)
 	mapa, erro := repositorio.BuscarDominios()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)

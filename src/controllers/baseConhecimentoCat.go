@@ -36,7 +36,7 @@ func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDePosts(db)
+	repositorio := repositorios.NovoRepositorioDeCategorias(db)
 	cat.IDCATEGORIA, erro = repositorio.CriarCategoria(cat)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -65,7 +65,7 @@ func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDePosts(db)
+	repositorio := repositorios.NovoRepositorioDeCategorias(db)
 	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
@@ -106,7 +106,7 @@ func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDePosts(db)
+	repositorio := repositorios.NovoRepositorioDeCategorias(db)
 	if erro = repositorio.DeletarCategoria(catID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -128,7 +128,7 @@ func BuscarTodasCategorias(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDePosts(db)
+	repositorio := repositorios.NovoRepositorioDeCategorias(db)
 	categoria, erro := repositorio.BuscarCategoria()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -155,7 +155,7 @@ func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDePosts(db)
+	repositorio := repositorios.NovoRepositorioDeCategorias(db)
 	categoria, erro := repositorio.BuscarCategoriaPorID(ID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)

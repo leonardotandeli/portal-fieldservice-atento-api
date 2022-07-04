@@ -16,7 +16,7 @@ func NovoRepositorioDeMapasOperacional(db *sql.DB) *MapasOperacional {
 	return &MapasOperacional{db}
 }
 
-// Criar insere um nova operação no banco de dados
+// CriarDadosMapa insere uma nova operação no banco de dados
 func (repositorio MapasOperacional) CriarDadosMapa(mapa modelos.MapaOperacional) (uint64, error) {
 
 	statement, erro := repositorio.db.Prepare(
@@ -94,7 +94,7 @@ func (repositorio MapasOperacional) Buscar(urlSite string, urlCliente string) ([
 
 var stringC string
 
-// Buscar traz todas as entradas do mapa operacional
+//  BuscarString traz todas as entradas do mapa operacional filtrando pelo site ou cliente
 func (repositorio MapasOperacional) BuscarString(urlSite string, urlCliente string) ([]modelos.MapaOperacional, error) {
 
 	urlSite = fmt.Sprintf("%s", urlSite)       // filtra por parametro na url ?site=[id]
@@ -150,131 +150,6 @@ func (repositorio MapasOperacional) BuscarString(urlSite string, urlCliente stri
 	}
 
 	return MapasOperacional, nil
-
-}
-
-// BuscarSites traz todos os sites do banco de dados
-func (repositorio MapasOperacional) BuscarSites() ([]modelos.Site, error) {
-
-	linhas, erro := repositorio.db.Query(
-		"SELECT IDSITE, NOME FROM SITES ORDER BY IDSITE",
-	)
-
-	if erro != nil {
-		return nil, erro
-	}
-	defer linhas.Close()
-
-	var MapasSite []modelos.Site
-
-	for linhas.Next() {
-		var mapa_site modelos.Site
-
-		if erro = linhas.Scan(
-			&mapa_site.IDSITE,
-			&mapa_site.NOME,
-		); erro != nil {
-			return nil, erro
-		}
-
-		MapasSite = append(MapasSite, mapa_site)
-	}
-
-	return MapasSite[1:38], nil
-
-}
-
-// BuscarClientes traz todos os clientes do banco de dados
-func (repositorio MapasOperacional) BuscarClientes() ([]modelos.Cliente, error) {
-
-	linhas, erro := repositorio.db.Query(
-		"SELECT IDCLIENTE, NOME, LOGO_URL FROM CLIENTES ORDER BY IDCLIENTE",
-	)
-
-	if erro != nil {
-		return nil, erro
-	}
-	defer linhas.Close()
-
-	var MapasCliente []modelos.Cliente
-
-	for linhas.Next() {
-		var mapa_cliente modelos.Cliente
-
-		if erro = linhas.Scan(
-			&mapa_cliente.IDCLIENTE,
-			&mapa_cliente.NOME,
-			&mapa_cliente.LOGO_URL,
-		); erro != nil {
-			return nil, erro
-		}
-
-		MapasCliente = append(MapasCliente, mapa_cliente)
-	}
-
-	return MapasCliente, nil
-
-}
-
-// BuscarDacs traz todos os dacs do banco de dados
-func (repositorio MapasOperacional) BuscarDacs() ([]modelos.Dac, error) {
-
-	linhas, erro := repositorio.db.Query(
-		"SELECT IDDAC, NOME FROM DACS ORDER BY IDDAC",
-	)
-
-	if erro != nil {
-		return nil, erro
-	}
-	defer linhas.Close()
-
-	var MapasDac []modelos.Dac
-
-	for linhas.Next() {
-		var mapa_dac modelos.Dac
-
-		if erro = linhas.Scan(
-			&mapa_dac.IDDAC,
-			&mapa_dac.NOME,
-		); erro != nil {
-			return nil, erro
-		}
-
-		MapasDac = append(MapasDac, mapa_dac)
-	}
-
-	return MapasDac, nil
-
-}
-
-// BuscarDominios traz todos os dominios do banco de dados
-func (repositorio MapasOperacional) BuscarDominios() ([]modelos.Dominio, error) {
-
-	linhas, erro := repositorio.db.Query(
-		"SELECT IDDOMINIO, NOME FROM DOMINIOS ORDER BY IDDOMINIO",
-	)
-
-	if erro != nil {
-		return nil, erro
-	}
-	defer linhas.Close()
-
-	var MapasDominio []modelos.Dominio
-
-	for linhas.Next() {
-		var mapa_dominio modelos.Dominio
-
-		if erro = linhas.Scan(
-			&mapa_dominio.IDDOMINIO,
-			&mapa_dominio.NOME,
-		); erro != nil {
-			return nil, erro
-		}
-
-		MapasDominio = append(MapasDominio, mapa_dominio)
-	}
-
-	return MapasDominio, nil
 
 }
 

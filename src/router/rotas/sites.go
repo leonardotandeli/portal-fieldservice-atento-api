@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// rotaSites define todas as rotas dos sites da atento
+// rotaSites define todas as rotas dos sites
 var rotaSites = []Rota{
 	{
 		URI:                "/sites",

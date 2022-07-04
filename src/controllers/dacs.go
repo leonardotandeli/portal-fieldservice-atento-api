@@ -17,7 +17,7 @@ func BuscarDadosDacs(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeMapasOperacional(db)
+	repositorio := repositorios.NovoRepositorioDeDacs(db)
 	mapa, erro := repositorio.BuscarDacs()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)

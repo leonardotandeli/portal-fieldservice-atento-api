@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// rotasBaseConhecimento define todas as rotas da base de conhecimento
+// rotasCategoriasBaseConhecimento define todas as rotas de categorias da base de conhecimento
 var rotasCategoriasBaseConhecimento = []Rota{
 	{
 		URI:                "/categorias",
