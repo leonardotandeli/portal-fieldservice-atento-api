@@ -219,7 +219,7 @@ func (repositorio Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
 
 // AtualizarSenha altera a senha de um usuário
 func (repositorio Usuarios) AtualizarSenha(usuarioID uint64, senha string) error {
-	statement, erro := repositorio.db.Prepare("UPDATE USUARIOS SET SENHA = ? WHERE IDUSUARIO = ?")
+	statement, erro := repositorio.db.Prepare("UPDATE USUARIOS SET SENHA = ?, STATUS = 'ATIVO' WHERE IDUSUARIO = ?")
 	if erro != nil {
 		return erro
 	}
