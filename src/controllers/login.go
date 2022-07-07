@@ -97,6 +97,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	v_gsa := usuarioSalvoNoBanco.V_GSA
 	v_mapa_operacional := usuarioSalvoNoBanco.V_MAPA_OPERACIONAL
 	v_mapa_operacional_adm := usuarioSalvoNoBanco.V_MAPA_OPERACIONAL_ADM
+	status := usuarioSalvoNoBanco.STATUS
 
-	respostas.JSON(w, http.StatusOK, modelos.DadosAutenticacao{ID: usuarioID, LOGIN_NT: login_nt, RE: re, CARGO: cargo, NOME: nome, EMAIL: email, Site: site, V_USUARIOS: v_usuarios, V_BDC_POSTS: v_bdc_posts, V_BDC_ADM: v_bdc_adm, V_IMDB: v_imdb, V_GSA: v_gsa, V_MAPA_OPERACIONAL: v_mapa_operacional, V_MAPA_OPERACIONAL_ADM: v_mapa_operacional_adm, Token: token})
+	respostas.JSON(w, http.StatusOK, modelos.DadosAutenticacao{ID: usuarioID, LOGIN_NT: login_nt, RE: re, CARGO: cargo, NOME: nome, EMAIL: email, Site: site, V_USUARIOS: v_usuarios, V_BDC_POSTS: v_bdc_posts, V_BDC_ADM: v_bdc_adm, V_IMDB: v_imdb, V_GSA: v_gsa, V_MAPA_OPERACIONAL: v_mapa_operacional, V_MAPA_OPERACIONAL_ADM: v_mapa_operacional_adm, STATUS: status, Token: token})
 }
