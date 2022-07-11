@@ -145,7 +145,6 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
-
 	senhaComHash, erro := seguranca.Hash(senha.Nova)
 	if erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
@@ -153,6 +152,12 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if erro = repositorio.AtualizarSenha(usuarioID, string(senhaComHash)); erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	repositorioSessions := repositorios.NovoRepositorioDeSessions(db)
+	if erro = repositorioSessions.DeletarSessionByUserID(usuarioID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
