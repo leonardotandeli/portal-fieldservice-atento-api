@@ -2,3 +2,4 @@ initial_data.sql
 .env
 api.exe
 api
+.vscode/settings.json
