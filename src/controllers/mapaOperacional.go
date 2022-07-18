@@ -122,6 +122,9 @@ func BuscarOperacoesMapa(w http.ResponseWriter, r *http.Request) {
 
 	urlSite := strings.ToLower(r.URL.Query().Get("site"))
 	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
+
+	urlPage := strings.ToLower(r.URL.Query().Get("pagina"))
+
 	db, erro := banco.Conectar()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
@@ -130,7 +133,7 @@ func BuscarOperacoesMapa(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDeMapasOperacional(db)
-	mapa, erro := repositorio.Buscar(urlSite, urlCliente)
+	mapa, erro := repositorio.Buscar(urlSite, urlCliente, urlPage)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
