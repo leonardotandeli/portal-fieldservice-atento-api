@@ -18,14 +18,14 @@ func NovoRepositorioDeCategorias(db *sql.DB) *Categorias {
 // CriarCategoria insere uma categoria no banco de dados
 func (repositorio Categorias) CriarCategoria(cat modelos.Post_Categoria) (uint64, error) {
 	statement, erro := repositorio.db.Prepare(
-		"INSERT INTO BDC_CATEGORIAS(NOME) VALUES (?)",
+		"INSERT INTO BDC_CATEGORIAS(NOME, ID_CLIENTE) VALUES (?, ?)",
 	)
 	if erro != nil {
 		return 0, erro
 	}
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(cat.NOME)
+	resultado, erro := statement.Exec(cat.NOME, cat.ID_CLIENTE)
 	if erro != nil {
 		return 0, erro
 	}
@@ -55,13 +55,15 @@ func (repositorio Categorias) AtualizarCategoria(catID uint64, cat modelos.Post_
 
 // Deletar exclui uma Categoria do banco de dados
 func (repositorio Categorias) DeletarCategoria(catID uint64) error {
-	statement, erro := repositorio.db.Prepare("DELETE FROM BDC_CATEGORIAS WHERE IDCATEGORIA = ?")
+	statement, erro := repositorio.db.Prepare("UPDATE BDC_CATEGORIAS SET STATUS = ? WHERE IDCATEGORIA = ?")
 	if erro != nil {
 		return erro
 	}
 	defer statement.Close()
 
-	if _, erro = statement.Exec(catID); erro != nil {
+	STATUS := "INATIVO"
+
+	if _, erro = statement.Exec(STATUS, catID); erro != nil {
 		return erro
 	}
 
@@ -72,7 +74,7 @@ func (repositorio Categorias) DeletarCategoria(catID uint64) error {
 func (repositorio Categorias) BuscarCategoria() ([]modelos.Post_Categoria, error) {
 
 	linhas, erro := repositorio.db.Query(
-		"SELECT IDCATEGORIA, NOME FROM BDC_CATEGORIAS ORDER BY IDCATEGORIA",
+		"SELECT IDCATEGORIA, NOME, ID_CLIENTE, STATUS FROM BDC_CATEGORIAS WHERE STATUS = ? ORDER BY IDCATEGORIA ", "ATIVO",
 	)
 
 	if erro != nil {
@@ -88,6 +90,8 @@ func (repositorio Categorias) BuscarCategoria() ([]modelos.Post_Categoria, error
 		if erro = linhas.Scan(
 			&categoria.IDCATEGORIA,
 			&categoria.NOME,
+			&categoria.ID_CLIENTE,
+			&categoria.STATUS,
 		); erro != nil {
 			return nil, erro
 		}
@@ -103,7 +107,7 @@ func (repositorio Categorias) BuscarCategoria() ([]modelos.Post_Categoria, error
 func (repositorio Categorias) BuscarCategoriaPorID(ID uint64) (modelos.Post_Categoria, error) {
 
 	linhas, erro := repositorio.db.Query(
-		"SELECT IDCATEGORIA, NOME FROM BDC_CATEGORIAS WHERE IDCATEGORIA = ?", ID)
+		"SELECT IDCATEGORIA, NOME, STATUS FROM BDC_CATEGORIAS WHERE IDCATEGORIA = ? AND STATUS = ?", ID, "ATIVO")
 	if erro != nil {
 		return modelos.Post_Categoria{}, erro
 	}
@@ -115,11 +119,44 @@ func (repositorio Categorias) BuscarCategoriaPorID(ID uint64) (modelos.Post_Cate
 		if erro = linhas.Scan(
 			&categoria.IDCATEGORIA,
 			&categoria.NOME,
+			&categoria.STATUS,
 		); erro != nil {
 			return modelos.Post_Categoria{}, erro
 		}
 	}
 
 	return categoria, nil
+
+}
+
+// BuscarPorID busca um chamado do banco de dados pelo id
+func (repositorio Categorias) BuscarCategoriaPorIDCliente(ID uint64) ([]modelos.Post_Categoria, error) {
+
+	linhas, erro := repositorio.db.Query(
+		"SELECT IDCATEGORIA, NOME, ID_CLIENTE, STATUS FROM BDC_CATEGORIAS WHERE ID_CLIENTE = ? AND STATUS = ?", ID, "ATIVO")
+
+	if erro != nil {
+		return nil, erro
+	}
+	defer linhas.Close()
+
+	var Categoria []modelos.Post_Categoria
+
+	for linhas.Next() {
+		var categoria modelos.Post_Categoria
+
+		if erro = linhas.Scan(
+			&categoria.IDCATEGORIA,
+			&categoria.NOME,
+			&categoria.ID_CLIENTE,
+			&categoria.STATUS,
+		); erro != nil {
+			return nil, erro
+		}
+
+		Categoria = append(Categoria, categoria)
+	}
+
+	return Categoria, nil
 
 }

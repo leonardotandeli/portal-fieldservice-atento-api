@@ -242,3 +242,27 @@ func SearchPostsPorCategoria(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusOK, posts)
 
 }
+
+// BuscarPostsPorStringCat traz os posts filtrando pelos parametros informados na URL (Necessário refatorar)
+func SearchPostsPorSubCategoria(w http.ResponseWriter, r *http.Request) {
+	//filtro de url para categorias e clientes
+	urlCategoria := strings.ToLower(r.URL.Query().Get("subcategoria"))
+	urlCliente := strings.ToLower(r.URL.Query().Get("cliente"))
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePosts(db)
+	posts, erro := repositorio.BuscarPorStringSubCat(urlCategoria, urlCliente)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusOK, posts)
+
+}
