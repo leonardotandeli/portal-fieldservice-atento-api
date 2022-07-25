@@ -2,28 +2,17 @@ package controllers
 
 import (
 	"api/src/banco"
-	"api/src/repositorios"
+	"api/src/modelos"
 	"api/src/respostas"
 	"net/http"
 )
 
-// BuscarDadosDacs traz os dacs armazenados no banco de dados
-func BuscarDadosDacs(w http.ResponseWriter, r *http.Request) {
+// BuscarTodosDacs retorna todos os dacs armazenados no banco de dados
+func BuscarTodosDacs(w http.ResponseWriter, r *http.Request) {
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
+	var dacs []modelos.Dac
+	banco.DB.Find(&dacs)
 
-	repositorio := repositorios.NovoRepositorioDeDacs(db)
-	mapa, erro := repositorio.BuscarDacs()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, mapa)
+	respostas.JSON(w, http.StatusOK, dacs)
 
 }

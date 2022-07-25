@@ -11,7 +11,7 @@ var rotasDACS = []Rota{
 	{
 		URI:                "/dacs",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarDadosDacs,
+		Funcao:             controllers.BuscarTodosDacs,
 		RequerAutenticacao: true,
 	},
 }
