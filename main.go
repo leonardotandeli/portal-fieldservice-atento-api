@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/src/banco"
 	"api/src/config"
 	"api/src/cron"
 	"api/src/router"
@@ -26,6 +27,8 @@ func init() {
 
 func main() {
 
+	//carrega o banco através do gorm
+	banco.ConectaComOBanco()
 	// carrega variaveis de ambiente
 	config.Carregar()
 
