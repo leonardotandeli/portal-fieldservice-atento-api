@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"api/src/banco"
-	"api/src/repositorios"
+	"api/src/modelos"
 	"api/src/respostas"
 	"net/http"
 	"strconv"
@@ -10,8 +10,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// BuscarCliente traz um cliente armazenadas no banco de dados através do ID.
-func BuscarCliente(w http.ResponseWriter, r *http.Request) {
+// BuscarUmCliente retorna os dados de um cliente através do ID
+func BuscarUmCliente(w http.ResponseWriter, r *http.Request) {
+
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["clienteId"], 10, 64)
 	if erro != nil {
@@ -19,40 +20,19 @@ func BuscarCliente(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDeClientes(db)
-	cliente, erro := repositorio.BuscarClientePorID(ID)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+	var cliente modelos.Cliente
+	banco.DB.First(&cliente, ID)
 
 	respostas.JSON(w, http.StatusOK, cliente)
 
 }
 
-// BuscarDadosCliente traz os clientes armazenados no banco de dados
-func BuscarDadosCliente(w http.ResponseWriter, r *http.Request) {
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
+// BuscarTodosClientes traz os clientes armazenados no banco de dados
+func BuscarTodosClientes(w http.ResponseWriter, r *http.Request) {
 
-	repositorio := repositorios.NovoRepositorioDeClientes(db)
-	mapa, erro := repositorio.BuscarClientes()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+	var clientes []modelos.Cliente
+	banco.DB.Find(&clientes)
 
-	respostas.JSON(w, http.StatusOK, mapa)
+	respostas.JSON(w, http.StatusOK, clientes)
 
 }
