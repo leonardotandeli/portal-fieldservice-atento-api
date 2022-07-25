@@ -11,7 +11,7 @@ var rotasDominios = []Rota{
 	{
 		URI:                "/dominios",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarDadosDominios,
+		Funcao:             controllers.BuscarTodosDominios,
 		RequerAutenticacao: true,
 	},
 }

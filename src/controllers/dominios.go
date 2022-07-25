@@ -2,28 +2,16 @@ package controllers
 
 import (
 	"api/src/banco"
-	"api/src/repositorios"
+	"api/src/modelos"
 	"api/src/respostas"
 	"net/http"
 )
 
-// BuscarDadosDominios traz os dominios armazenados no banco de dados
-func BuscarDadosDominios(w http.ResponseWriter, r *http.Request) {
+// BuscarTodosDominios traz os dominios armazenados no banco de dados
+func BuscarTodosDominios(w http.ResponseWriter, r *http.Request) {
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
+	var dominios []modelos.Dominio
+	banco.DB.Find(&dominios)
 
-	repositorio := repositorios.NovoRepositorioDeDominios(db)
-	mapa, erro := repositorio.BuscarDominios()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, mapa)
-
+	respostas.JSON(w, http.StatusOK, dominios)
 }
