@@ -4,7 +4,6 @@ import (
 	"api/src/autenticacao"
 	"api/src/banco"
 	"api/src/modelos"
-	"api/src/repositorios"
 	"api/src/respostas"
 	"log"
 	"net/http"
@@ -44,22 +43,12 @@ func LoggerOnDb(w http.ResponseWriter, r *http.Request, ACTION string) {
 
 	//logger
 	var logs modelos.Logs
-	logs.Usuario.IDUSUARIO = autenticacao.ExtrairDadosUsuario(r).Usuario.IDUSUARIO
-	logs.Usuario.LOGIN_NT = autenticacao.ExtrairDadosUsuario(r).Usuario.LOGIN_NT
-	logs.Usuario.NOME = autenticacao.ExtrairDadosUsuario(r).Usuario.NOME
+	logs.IDUSUARIO = autenticacao.ExtrairDadosUsuario(r).IDUSUARIO
+	logs.LOGIN_NT = autenticacao.ExtrairDadosUsuario(r).LOGIN_NT
+	logs.NOME = autenticacao.ExtrairDadosUsuario(r).NOME
 	logs.DATA = time.Now()
 	logs.ACTION = ACTION
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-	repositorioLogs := repositorios.NovoRepositorioDeLogs(db)
-	logs.Usuario.IDUSUARIO, erro = repositorioLogs.LoggerDB(logs)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+
+	banco.DB.Create(&logs)
 
 }

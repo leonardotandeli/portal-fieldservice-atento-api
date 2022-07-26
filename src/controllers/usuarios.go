@@ -34,17 +34,8 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
-	usuario.IDUSUARIO, erro = repositorio.CriarUsuario(usuario)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
+	if resultado := banco.DB.Create(&usuario); resultado.Error != nil {
+		respostas.Erro(w, http.StatusInternalServerError, resultado.Error)
 		return
 	}
 

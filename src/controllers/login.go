@@ -4,7 +4,6 @@ import (
 	"api/src/autenticacao"
 	"api/src/banco"
 	"api/src/modelos"
-	"api/src/repositorios"
 	"api/src/respostas"
 	"api/src/seguranca"
 	"encoding/json"
@@ -29,23 +28,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-
-	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
-	usuarioSalvoNoBanco, erro := repositorio.BuscarPorLogin(usuario.LOGIN_NT)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+	var usuarioSalvoNoBanco modelos.Usuario
+	banco.DB.First(&usuarioSalvoNoBanco, "LOGIN_NT", usuario.LOGIN_NT)
 
 	if erro = seguranca.VerificarSenha(usuarioSalvoNoBanco.SENHA, usuario.SENHA); erro != nil {
 		respostas.Erro(w, http.StatusUnauthorized, erro)
+
 		return
+
 	}
 
 	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.IDUSUARIO, usuarioSalvoNoBanco.LOGIN_NT, usuarioSalvoNoBanco.NOME)
@@ -56,31 +46,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	//logger db - inclui um log no banco ao realizar o login
 	var logs modelos.Logs
-	logs.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
-	logs.Usuario.LOGIN_NT = usuarioSalvoNoBanco.LOGIN_NT
-	logs.Usuario.NOME = usuarioSalvoNoBanco.NOME
+	logs.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
+	logs.LOGIN_NT = usuarioSalvoNoBanco.LOGIN_NT
+	logs.NOME = usuarioSalvoNoBanco.NOME
 	logs.DATA = time.Now()
 	logs.ACTION = "Login Efetuado"
 
-	repositorioLogs := repositorios.NovoRepositorioDeLogs(db)
-	logs.Usuario.IDUSUARIO, erro = repositorioLogs.LoggerDB(logs)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+	banco.DB.Create(&logs)
 
 	// Session db - inclui uma sessão no banco ao realizar o login
 	var session modelos.Session
-	session.Usuario.IDUSUARIO = usuarioSalvoNoBanco.IDUSUARIO
-	session.DadosAutenticacao.Token = token
+	session.ID_USUARIO = usuarioSalvoNoBanco.IDUSUARIO
+	session.Token = token
 	session.DATA = time.Now()
 
-	repositorioSession := repositorios.NovoRepositorioDeSessions(db)
-	logs.Usuario.IDUSUARIO, erro = repositorioSession.SessionCreate(session)
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+	banco.DB.Create(&session)
 
 	// retorna dados do usuário como JSON
 	usuarioID := strconv.FormatUint(usuarioSalvoNoBanco.IDUSUARIO, 10)

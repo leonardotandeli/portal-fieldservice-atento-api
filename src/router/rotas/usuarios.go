@@ -46,7 +46,7 @@ var rotasUsuarios = []Rota{
 	{
 		URI:                "/usuarios/deslogar/{userId}",
 		Metodo:             http.MethodDelete,
-		Funcao:             controllers.DeletarSessionDB,
+		Funcao:             controllers.DeletarSessionBanco,
 		RequerAutenticacao: true,
 	},
 }

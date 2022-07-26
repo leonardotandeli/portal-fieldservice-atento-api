@@ -47,7 +47,7 @@ func ValidarToken(r *http.Request) error {
 //SessionDB escreve informações da sessão no banco de dados.
 func SessionDB(r *http.Request) error {
 	var session modelos.Session
-	session.Usuario.IDUSUARIO = ExtrairDadosUsuario(r).Usuario.IDUSUARIO
+	session.ID_USUARIO = ExtrairDadosUsuario(r).IDUSUARIO
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -56,12 +56,12 @@ func SessionDB(r *http.Request) error {
 	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioDeSessions(db)
-	sessionArmazenadaDB, erro := repositorio.BuscarPorID(session.Usuario.IDUSUARIO)
+	sessionArmazenadaDB, erro := repositorio.BuscarPorID(session.ID_USUARIO)
 	if erro != nil {
 		return erro
 	}
 
-	if session.Usuario.IDUSUARIO == sessionArmazenadaDB.Usuario.IDUSUARIO {
+	if session.ID_USUARIO == sessionArmazenadaDB.ID_USUARIO {
 		return erro
 	}
 	return errors.New("TOKEN NÃO ESTÁ VÁLIDO")
@@ -116,12 +116,12 @@ func ExtrairDadosUsuario(r *http.Request) (user modelos.Logs) {
 	}
 
 	if permissoes, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		user.Usuario.IDUSUARIO, erro = strconv.ParseUint(fmt.Sprintf("%.0f", permissoes["usuarioId"]), 10, 64)
+		user.IDUSUARIO, erro = strconv.ParseUint(fmt.Sprintf("%.0f", permissoes["usuarioId"]), 10, 64)
 		if erro != nil {
 			return user
 		}
-		user.Usuario.LOGIN_NT = fmt.Sprintf("%s", permissoes["login_nt"])
-		user.Usuario.NOME = fmt.Sprintf("%s", permissoes["nome"])
+		user.LOGIN_NT = fmt.Sprintf("%s", permissoes["login_nt"])
+		user.NOME = fmt.Sprintf("%s", permissoes["nome"])
 
 		return user
 	}

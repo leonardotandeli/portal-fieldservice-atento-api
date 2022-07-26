@@ -11,8 +11,8 @@ import (
 
 // Usuario representa um usuário cadastrado no sistema
 type Usuario struct {
-	IDUSUARIO              uint64    `json:"idusuario,omitempty"`
-	NOME                   string    `json:"nome,omitempty""`
+	IDUSUARIO              uint64    `json:"idusuario,omitempty" gorm:"primaryKey;column:IDUSUARIO"`
+	NOME                   string    `json:"nome,omitempty"  gorm:"column:NOME"`
 	LOGIN_NT               string    `json:"login_nt,omitempty"`
 	RE                     string    `json:"re,omitempty"`
 	CARGO                  string    `json:"cargo,omitempty"`
@@ -27,8 +27,8 @@ type Usuario struct {
 	V_MAPA_OPERACIONAL_ADM string    `json:"v_mapa_operacional_adm,omitempty"`
 	ID_SITE                string    `json:"id_site,omitempty"`
 	DATA_CRIACAO           time.Time `json:"data_criacao,omitempty"`
-	Site                   Site
-	STATUS                 string `json:"status,omitempty"`
+	Site                   Site      `gorm:"foreignKey:ID_SITE;references:IDSITE"`
+	STATUS                 string    `json:"status,omitempty"`
 }
 
 // Struct Senha representa o formato da requisição de alteração de senha

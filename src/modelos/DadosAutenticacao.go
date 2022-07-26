@@ -17,6 +17,6 @@ type DadosAutenticacao struct {
 	V_GSA                  string `json:"v_gsa,omitempty"`
 	V_MAPA_OPERACIONAL     string `json:"v_mapa_operacional,omitempty"`
 	V_MAPA_OPERACIONAL_ADM string `json:"v_mapa_operacional_adm,omitempty"`
-	Site                   Site
+	Site                   Site   `gorm:"embedded"`
 	STATUS                 string `json:"status,omitempty"`
 }
