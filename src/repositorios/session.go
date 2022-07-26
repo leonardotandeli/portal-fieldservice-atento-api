@@ -30,8 +30,8 @@ func (repositorio Sessions) BuscarPorID(ID uint64) (modelos.Session, error) {
 	if linhas.Next() {
 		if erro = linhas.Scan(
 			&session.ID,
-			&session.Usuario.IDUSUARIO,
-			&session.DadosAutenticacao.Token,
+			&session.ID_USUARIO,
+			&session.Token,
 			&session.DATA,
 		); erro != nil {
 			return modelos.Session{}, erro
@@ -51,7 +51,7 @@ func (repositorio Sessions) SessionCreate(session modelos.Session) (uint64, erro
 	}
 	defer statment.Close()
 
-	resultado, erro := statment.Exec(session.Usuario.IDUSUARIO, session.DadosAutenticacao.Token, session.DATA)
+	resultado, erro := statment.Exec(session.ID_USUARIO, session.Token, session.DATA)
 	if erro != nil {
 		return 0, erro
 	}

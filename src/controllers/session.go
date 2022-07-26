@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"api/src/banco"
-	"api/src/repositorios"
+	"api/src/modelos"
 	"api/src/respostas"
 	"net/http"
 	"strconv"
@@ -10,8 +10,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// DeletarSessionDB deleta a sessão armazenada no banco
-func DeletarSessionDB(w http.ResponseWriter, r *http.Request) {
+// DeletarSessionBanco deleta a sessão armazenada no banco
+func DeletarSessionBanco(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
 	userID, erro := strconv.ParseUint(parametros["userId"], 10, 64)
@@ -20,22 +20,7 @@ func DeletarSessionDB(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
+	var session modelos.Session
+	banco.DB.Where("ID_USUARIO = ?", userID).Delete(&session)
 
-	repositorioD := repositorios.NovoRepositorioDeSessions(db)
-	sessionArmazenadaDB, erro := repositorioD.BuscarPorID(userID)
-	if erro != nil {
-		return
-	}
-
-	repositorio := repositorios.NovoRepositorioDeSessions(db)
-	if erro = repositorio.DeletarSession(sessionArmazenadaDB.ID); erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
 }
