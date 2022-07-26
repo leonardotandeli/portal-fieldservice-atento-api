@@ -25,7 +25,7 @@ func (repositorio Logs) LoggerDB(logs modelos.Logs) (uint64, error) {
 	}
 	defer statment.Close()
 
-	resultado, erro := statment.Exec(logs.Usuario.IDUSUARIO, logs.Usuario.NOME, logs.Usuario.LOGIN_NT, logs.ACTION, logs.DATA)
+	resultado, erro := statment.Exec(logs.IDUSUARIO, logs.NOME, logs.LOGIN_NT, logs.ACTION, logs.DATA)
 	if erro != nil {
 		return 0, erro
 	}
