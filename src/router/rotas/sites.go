@@ -10,7 +10,7 @@ var rotaSites = []Rota{
 	{
 		URI:                "/sites",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarSites,
+		Funcao:             controllers.BuscarTodosSites,
 		RequerAutenticacao: true,
 	},
 }

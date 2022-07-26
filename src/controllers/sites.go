@@ -2,28 +2,17 @@ package controllers
 
 import (
 	"api/src/banco"
-	"api/src/repositorios"
+	"api/src/modelos"
 	"api/src/respostas"
 	"net/http"
 )
 
 // BuscarSites traz os sites armazenados no banco de dados
-func BuscarSites(w http.ResponseWriter, r *http.Request) {
+func BuscarTodosSites(w http.ResponseWriter, r *http.Request) {
 
-	db, erro := banco.Conectar()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
+	var sites []modelos.Site
+	banco.DB.Find(&sites)
 
-	repositorio := repositorios.NovoRepositorioDeSites(db)
-	mapa, erro := repositorio.BuscarSites()
-	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
-	respostas.JSON(w, http.StatusOK, mapa)
+	respostas.JSON(w, http.StatusOK, sites)
 
 }
