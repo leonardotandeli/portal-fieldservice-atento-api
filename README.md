@@ -1,5 +1,5 @@
-# INTRANET FIELD SERVICE - API
-A Intranet do Field Service é um sistema desenvolvido de forma não oficial para auxilio e centralização de informações utilizadas na área de TI da Atento Brasil.
+# PORTAL FIELD SERVICE - API
+O portal do Field Service é um sistema desenvolvido de forma não oficial para auxilio e centralização de informações utilizadas na área de TI da Atento Brasil.
 
 ### Funcionalidades
 - Página Inicial com centralização de ferramentas/links úteis. 
@@ -10,13 +10,13 @@ A Intranet do Field Service é um sistema desenvolvido de forma não oficial par
 ## 💻 Pré-requisitos
 Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
-* Versão mais recente do `Golang`
+* Versão mais recente do `Go`
 
-## 🚀 Rodando a API da INTRANET
+## 🚀 Rodando a API
 
 Para rodar a API, siga as etapas listadas abaixo: 
 
-- Importar os scripts presentes na pasta "sql" no banco de dados MYSQL ou MARIADB.
+- Importar os scripts presentes na pasta "sql" no banco de dados MYSQL.
 - Defina as credenciais de acesso ao banco de dados no arquivo .env.
 - Compile e Execute a API com os seguintes comandos:
   
