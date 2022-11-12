@@ -15,7 +15,7 @@ import (
 )
 
 // CriarCategoriaBase adiciona uma nova categoria no banco de dados
-func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
+func CriarSubCategoriaBase(w http.ResponseWriter, r *http.Request) {
 
 	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
@@ -23,7 +23,7 @@ func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var cat modelos.Post_Categoria
+	var cat modelos.Post_SubCategoria
 	if erro = json.Unmarshal(corpoRequisicao, &cat); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -36,21 +36,21 @@ func CriarCategoriaBase(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeCategorias(db)
-	cat.IDCATEGORIA, erro = repositorio.CriarCategoria(cat)
+	repositorio := repositorios.NovoRepositorioDeSubCategorias(db)
+	cat.IDSUBCATEGORIA, erro = repositorio.CriarSubCategoria(cat)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	//logger db
-	middlewares.LoggerOnDb(w, r, "Categoria criada na base de conhecimento: ["+"IDPost: "+strconv.Itoa(int(cat.IDCATEGORIA))+" | "+"Nome: "+cat.NOME+"]")
+	middlewares.LoggerOnDb(w, r, "Categoria criada na base de conhecimento: ["+"IDPost: "+strconv.Itoa(int(cat.IDSUBCATEGORIA))+" | "+"Nome: "+cat.NOME+"]")
 
 	respostas.JSON(w, http.StatusCreated, cat)
 }
 
 // AtualizarCategoria altera os dados de uma categoria
-func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
+func AtualizarSubCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
 	if erro != nil {
@@ -65,20 +65,20 @@ func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeCategorias(db)
+	repositorio := repositorios.NovoRepositorioDeSubCategorias(db)
 	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
-	var cat modelos.Post_Categoria
+	var cat modelos.Post_SubCategoria
 	if erro = json.Unmarshal(corpoRequisicao, &cat); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
-	if erro = repositorio.AtualizarCategoria(catID, cat); erro != nil {
+	if erro = repositorio.AtualizarSubCategoria(catID, cat); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
@@ -90,7 +90,7 @@ func AtualizarCategoria(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeletarCategoria exclui uma categoria
-func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
+func DeletarSubCategoria(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
 	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
@@ -106,8 +106,8 @@ func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeCategorias(db)
-	if erro = repositorio.DeletarCategoria(catID); erro != nil {
+	repositorio := repositorios.NovoRepositorioDeSubCategorias(db)
+	if erro = repositorio.DeletarSubCategoria(catID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
@@ -119,7 +119,7 @@ func DeletarCategoria(w http.ResponseWriter, r *http.Request) {
 }
 
 // BuscarTodasCategorias traz todas as categorias armazenadas no banco de dados
-func BuscarTodasCategorias(w http.ResponseWriter, r *http.Request) {
+func BuscarTodasSubCategorias(w http.ResponseWriter, r *http.Request) {
 
 	db, erro := banco.Conectar()
 	if erro != nil {
@@ -128,8 +128,8 @@ func BuscarTodasCategorias(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeCategorias(db)
-	categoria, erro := repositorio.BuscarCategoria()
+	repositorio := repositorios.NovoRepositorioDeSubCategorias(db)
+	categoria, erro := repositorio.BuscarSubCategoria()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -140,7 +140,7 @@ func BuscarTodasCategorias(w http.ResponseWriter, r *http.Request) {
 }
 
 // BuscarCategoria traz uma categoria armazenadas no banco de dados
-func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
+func BuscarSubCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
 	if erro != nil {
@@ -155,8 +155,8 @@ func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeCategorias(db)
-	categoria, erro := repositorio.BuscarCategoriaPorID(ID)
+	repositorio := repositorios.NovoRepositorioDeSubCategorias(db)
+	categoria, erro := repositorio.BuscarSubCategoriaPorID(ID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -167,9 +167,9 @@ func BuscarCategoria(w http.ResponseWriter, r *http.Request) {
 }
 
 // BuscarCategoria traz uma categoria armazenadas no banco de dados
-func BuscarCategoriaPorCliente(w http.ResponseWriter, r *http.Request) {
+func BuscarSubCategoriaPorCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
-	ID, erro := strconv.ParseUint(parametros["clienteId"], 10, 64)
+	ID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
 	if erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -182,13 +182,13 @@ func BuscarCategoriaPorCliente(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repositorio := repositorios.NovoRepositorioDeCategorias(db)
-	categoria, erro := repositorio.BuscarCategoriaPorIDCliente(ID)
+	repositorio := repositorios.NovoRepositorioDeSubCategorias(db)
+	subcategoria, erro := repositorio.BuscarSubCategoriaPorCategoria(ID)
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	respostas.JSON(w, http.StatusOK, categoria)
+	respostas.JSON(w, http.StatusOK, subcategoria)
 
 }

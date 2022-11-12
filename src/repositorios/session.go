@@ -94,3 +94,18 @@ func (repositorio Sessions) CronDeletarSessionApos12Horas() error {
 
 	return nil
 }
+
+// DeletarSession exclui uma sessão do banco de dados filtrando pelo id do usuário
+func (repositorio Sessions) DeletarSessionByUserID(ID_USUARIO uint64) error {
+	statement, erro := repositorio.db.Prepare("DELETE FROM SESSIONS WHERE ID_USUARIO = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(ID_USUARIO); erro != nil {
+		return erro
+	}
+
+	return nil
+}

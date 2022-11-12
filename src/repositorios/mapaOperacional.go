@@ -4,6 +4,8 @@ import (
 	"api/src/modelos"
 	"database/sql"
 	"fmt"
+	"math"
+	"strconv"
 )
 
 // MapasOperacional representa um repositório de MapaOperacional
@@ -42,14 +44,28 @@ func (repositorio MapasOperacional) CriarDadosMapa(mapa modelos.MapaOperacional)
 }
 
 // Buscar traz todas as entradas do mapa operacional
-func (repositorio MapasOperacional) Buscar(urlSite string, urlCliente string) ([]modelos.MapaOperacional, error) {
+func (repositorio MapasOperacional) Buscar(urlSite string, urlCliente string, urlPage string) ([]modelos.MapaOperacional, error) {
 
 	urlSite = fmt.Sprintf("%s", urlSite)       // filtra por parametro na url ?site=[id]
 	urlCliente = fmt.Sprintf("%s", urlCliente) // filtra por parametro na url ?site=[id]
 
+	urlPage = fmt.Sprintf("%s", urlPage) // filtra por parametro na url ?site=[id]
+
+	if urlPage == "" {
+		urlPage = "1"
+	}
+
+	urlPageInt, _ := strconv.Atoi(urlPage)
+	porPagina := 9
+
+	var total int
+_:
+	repositorio.db.QueryRow("SELECT COUNT(IDMAPA) FROM mapa_operacional").Scan(&total)
+
+	fmt.Println(total)
+
 	linhas, erro := repositorio.db.Query(
-		"SELECT M.IDMAPA, M.OPERACAO, M.VLAN_DADOS, M.VLAN_VOZ, M.CONFIG_CONTRATUAL, M.VERSAO_WINDOWS, M.IMAGEM, M.TEMPLATE, M.GRUPO_IMDB, M.GRAVADOR, M.OBSERVACOES, M.ID_SITE, M.ID_CLIENTE, M.ID_DOMINIO, M.ID_DAC, S.NOME, C.NOME, D.NOME, T.NOME FROM MAPA_OPERACIONAL M INNER JOIN SITES S ON M.ID_SITE = S.IDSITE INNER JOIN CLIENTES C ON M.ID_CLIENTE = C.IDCLIENTE INNER JOIN DOMINIOS D ON M.ID_DOMINIO = D.IDDOMINIO INNER JOIN DACS T ON M.ID_DAC = T.IDDAC ORDER BY M.IDMAPA DESC",
-	)
+		"SELECT M.IDMAPA, M.OPERACAO, M.VLAN_DADOS, M.VLAN_VOZ, M.CONFIG_CONTRATUAL, M.VERSAO_WINDOWS, M.IMAGEM, M.TEMPLATE, M.GRUPO_IMDB, M.GRAVADOR, M.OBSERVACOES, M.ID_SITE, M.ID_CLIENTE, M.ID_DOMINIO, M.ID_DAC, S.NOME, C.NOME, D.NOME, T.NOME FROM MAPA_OPERACIONAL M INNER JOIN SITES S ON M.ID_SITE = S.IDSITE INNER JOIN CLIENTES C ON M.ID_CLIENTE = C.IDCLIENTE INNER JOIN DOMINIOS D ON M.ID_DOMINIO = D.IDDOMINIO INNER JOIN DACS T ON M.ID_DAC = T.IDDAC ORDER BY M.IDMAPA DESC LIMIT ? OFFSET ?", porPagina, (urlPageInt-1)*porPagina)
 
 	if erro != nil {
 		return nil, erro
@@ -60,6 +76,9 @@ func (repositorio MapasOperacional) Buscar(urlSite string, urlCliente string) ([
 
 	for linhas.Next() {
 		var mapa_operacional modelos.MapaOperacional
+		mapa_operacional.Pagination.Total = total
+		mapa_operacional.Pagination.Pagina = urlPageInt
+		mapa_operacional.Pagination.UltimaPagina = math.Ceil(float64(total) / float64(porPagina))
 
 		if erro = linhas.Scan(
 			&mapa_operacional.IDMAPA,

@@ -26,7 +26,8 @@ func (repositorio Usuarios) CriarUsuario(usuario modelos.Usuario) (uint64, error
 	}
 	defer statement.Close()
 
-	resultado, erro := statement.Exec(usuario.NOME, usuario.LOGIN_NT, usuario.RE, usuario.CARGO, usuario.EMAIL, usuario.SENHA, usuario.V_USUARIOS, usuario.V_BDC_POSTS, usuario.V_BDC_ADM, usuario.V_IMDB, usuario.V_GSA, usuario.V_MAPA_OPERACIONAL, usuario.V_MAPA_OPERACIONAL_ADM, usuario.ID_SITE, usuario.STATUS)
+	status := "PRIMEIRO_ACESSO"
+	resultado, erro := statement.Exec(usuario.NOME, usuario.LOGIN_NT, usuario.RE, usuario.CARGO, usuario.EMAIL, usuario.SENHA, usuario.V_USUARIOS, usuario.V_BDC_POSTS, usuario.V_BDC_ADM, usuario.V_IMDB, usuario.V_GSA, usuario.V_MAPA_OPERACIONAL, usuario.V_MAPA_OPERACIONAL_ADM, usuario.ID_SITE, status)
 	if erro != nil {
 		return 0, erro
 	}
@@ -218,7 +219,7 @@ func (repositorio Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
 
 // AtualizarSenha altera a senha de um usuário
 func (repositorio Usuarios) AtualizarSenha(usuarioID uint64, senha string) error {
-	statement, erro := repositorio.db.Prepare("UPDATE USUARIOS SET SENHA = ? WHERE IDUSUARIO = ?")
+	statement, erro := repositorio.db.Prepare("UPDATE USUARIOS SET SENHA = ?, STATUS = 'ATIVO' WHERE IDUSUARIO = ?")
 	if erro != nil {
 		return erro
 	}
