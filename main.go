@@ -4,6 +4,8 @@ import (
 	"api/src/config"
 	"api/src/cron"
 	"api/src/router"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,7 +15,7 @@ import (
 )
 
 // Função init gera a secret key do token
-/*
+
 func init() {
 	secret_key := make([]byte, 64)
 	if _, err := rand.Read(secret_key); err != nil {
@@ -22,7 +24,6 @@ func init() {
 	string64 := base64.StdEncoding.EncodeToString(secret_key)
 	fmt.Println(string64)
 }
-*/
 
 func main() {
 
