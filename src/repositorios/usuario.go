@@ -26,7 +26,7 @@ func (repositorio Usuarios) CriarUsuario(usuario modelos.Usuario) (uint64, error
 	}
 	defer statement.Close()
 
-	status := "PRIMEIRO_ACESSO"
+	status := "ATIVO"
 	resultado, erro := statement.Exec(usuario.NOME, usuario.LOGIN_NT, usuario.RE, usuario.CARGO, usuario.EMAIL, usuario.SENHA, usuario.V_USUARIOS, usuario.V_BDC_POSTS, usuario.V_BDC_ADM, usuario.V_IMDB, usuario.V_GSA, usuario.V_MAPA_OPERACIONAL, usuario.V_MAPA_OPERACIONAL_ADM, usuario.ID_SITE, status)
 	if erro != nil {
 		return 0, erro

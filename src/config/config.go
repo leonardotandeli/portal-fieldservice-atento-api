@@ -18,6 +18,9 @@ var (
 
 	// SecretKey é a chave que vai ser usada para assinar o token
 	SecretKey []byte
+
+	// SSOPASS é utilizada para autenticar o usuário via SSO
+	SSOPASS = ""
 )
 
 // Carregar vai inicializar buscar as variáveis de ambiente informadas no arquivo (.env)
@@ -42,4 +45,5 @@ func Carregar() {
 	)
 
 	SecretKey = []byte(os.Getenv("SECRET_KEY"))
+	SSOPASS = os.Getenv("SSO_PASS")
 }
