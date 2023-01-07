@@ -155,6 +155,13 @@ func LoginSSO(w http.ResponseWriter, r *http.Request) {
 		idSite = usuario.ID_SITE
 	}
 
+	banco.DB.First(&usuario, usuarioIDSalvoNoBanco.IDUSUARIO)
+	usuario.NOME = nomeUser
+	usuario.CARGO = cargoUser
+	usuario.EMAIL = emailUser
+	usuario.RE = reFinal
+	usuario.ID_SITE = idSite
+	banco.DB.Save(&usuario)
 
 	usuarioSalvoNoBanco, erro := repositorio.BuscarPorLogin(usuario.LOGIN_NT)
 	if erro != nil {
