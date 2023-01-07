@@ -5,17 +5,14 @@ import (
 	"database/sql"
 )
 
-// Categorias representa um repositório de categorias
 type Categorias struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeCategorias cria um repositório de categorias
 func NovoRepositorioDeCategorias(db *sql.DB) *Categorias {
 	return &Categorias{db}
 }
 
-// CriarCategoria insere uma categoria no banco de dados
 func (repositorio Categorias) CriarCategoria(cat modelos.Post_Categoria) (uint64, error) {
 	statement, erro := repositorio.db.Prepare(
 		"INSERT INTO BDC_CATEGORIAS(NOME, ID_CLIENTE) VALUES (?, ?)",
@@ -38,7 +35,6 @@ func (repositorio Categorias) CriarCategoria(cat modelos.Post_Categoria) (uint64
 	return uint64(ultimoIDInserido), nil
 }
 
-// Atualizar altera os dados de uma categoria no banco de dados
 func (repositorio Categorias) AtualizarCategoria(catID uint64, cat modelos.Post_Categoria) error {
 	statement, erro := repositorio.db.Prepare("UPDATE BDC_CATEGORIAS SET NOME = ? WHERE IDCATEGORIA = ?")
 	if erro != nil {
@@ -53,7 +49,6 @@ func (repositorio Categorias) AtualizarCategoria(catID uint64, cat modelos.Post_
 	return nil
 }
 
-// Deletar exclui uma Categoria do banco de dados
 func (repositorio Categorias) DeletarCategoria(catID uint64) error {
 	statement, erro := repositorio.db.Prepare("UPDATE BDC_CATEGORIAS SET STATUS = ? WHERE IDCATEGORIA = ?")
 	if erro != nil {
@@ -70,7 +65,6 @@ func (repositorio Categorias) DeletarCategoria(catID uint64) error {
 	return nil
 }
 
-// BuscarCategoria traz todas as categorias do banco de dados
 func (repositorio Categorias) BuscarCategoria() ([]modelos.Post_Categoria, error) {
 
 	linhas, erro := repositorio.db.Query(
@@ -103,7 +97,6 @@ func (repositorio Categorias) BuscarCategoria() ([]modelos.Post_Categoria, error
 
 }
 
-// BuscarPorID busca um chamado do banco de dados pelo id
 func (repositorio Categorias) BuscarCategoriaPorID(ID uint64) (modelos.Post_Categoria, error) {
 
 	linhas, erro := repositorio.db.Query(
@@ -129,7 +122,6 @@ func (repositorio Categorias) BuscarCategoriaPorID(ID uint64) (modelos.Post_Cate
 
 }
 
-// BuscarPorID busca um chamado do banco de dados pelo id
 func (repositorio Categorias) BuscarCategoriaPorIDCliente(ID uint64) ([]modelos.Post_Categoria, error) {
 
 	linhas, erro := repositorio.db.Query(

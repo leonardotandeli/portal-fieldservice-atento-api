@@ -5,17 +5,14 @@ import (
 	"database/sql"
 )
 
-// Logs representa um repositório de Logs
 type Logs struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeLogs inicia um repositório de Logs
 func NovoRepositorioDeLogs(db *sql.DB) *Logs {
 	return &Logs{db}
 }
 
-//LoggerOnLogin insere um novo registro no banco ao receber o login
 func (repositorio Logs) LoggerDB(logs modelos.Logs) (uint64, error) {
 	statment, erro := repositorio.db.Prepare(
 		"INSERT INTO LOGS(IDUSUARIO, NOME, LOGIN_NT, ACTION, DATA) VALUES(?, ?, ?, ?, ?)",

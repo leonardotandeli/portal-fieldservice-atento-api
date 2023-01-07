@@ -44,7 +44,7 @@ func ValidarToken(r *http.Request) error {
 	return errors.New("TOKEN NÃO ESTÁ VÁLIDO")
 }
 
-//SessionDB escreve informações da sessão no banco de dados.
+//SessionDB retorna os dados de uma sessão armazenada no banco de dados filtrando pelo id do usuário e checa se a sessão é válida
 func SessionDB(r *http.Request) error {
 	var session modelos.Session
 	session.Usuario.IDUSUARIO = ExtrairDadosUsuario(r).Usuario.IDUSUARIO

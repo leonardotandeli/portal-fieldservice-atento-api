@@ -5,17 +5,14 @@ import (
 	"database/sql"
 )
 
-// Dominios representa um repositório de Dominios
 type Dominios struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeDominios inicia o repositório de Dominios
 func NovoRepositorioDeDominios(db *sql.DB) *Dominios {
 	return &Dominios{db}
 }
 
-// BuscarDominios traz todos os dominios do banco de dados
 func (repositorio Dominios) BuscarDominios() ([]modelos.Dominio, error) {
 
 	linhas, erro := repositorio.db.Query(

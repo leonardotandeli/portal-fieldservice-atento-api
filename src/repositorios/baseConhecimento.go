@@ -6,17 +6,14 @@ import (
 	"fmt"
 )
 
-// Posts representa um repositório de publicações
 type Posts struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDePosts cria um repositório de publicações
 func NovoRepositorioDePosts(db *sql.DB) *Posts {
 	return &Posts{db}
 }
 
-// Criar insere uma publicação no banco de dados
 func (repositorio Posts) Criar(post modelos.Post) (uint64, error) {
 	statement, erro := repositorio.db.Prepare(
 		"INSERT INTO BDC_POSTS(TITULO, CONTEUDO, ID_CATEGORIA, ID_SUBCATEGORIA, ID_USUARIO, ID_SITE, ID_CLIENTE) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -39,7 +36,6 @@ func (repositorio Posts) Criar(post modelos.Post) (uint64, error) {
 	return uint64(ultimoIDInserido), nil
 }
 
-// Atualizar altera os dados de uma publicação no banco de dados
 func (repositorio Posts) Atualizar(postID uint64, post modelos.Post) error {
 	statement, erro := repositorio.db.Prepare("UPDATE BDC_POSTS SET TITULO = ?, CONTEUDO = ?, ID_CATEGORIA = ?, ID_SUBCATEGORIA = ?, ID_USUARIO = ?, ID_SITE = ?, ID_CLIENTE = ? WHERE IDPOST = ?")
 	if erro != nil {
@@ -54,7 +50,6 @@ func (repositorio Posts) Atualizar(postID uint64, post modelos.Post) error {
 	return nil
 }
 
-// Deletar exclui uma publicação do banco de dados
 func (repositorio Posts) Deletar(postID uint64) error {
 	statement, erro := repositorio.db.Prepare("DELETE FROM BDC_POSTS WHERE IDPOST = ?")
 	if erro != nil {
@@ -69,7 +64,6 @@ func (repositorio Posts) Deletar(postID uint64) error {
 	return nil
 }
 
-// BuscarPorID busca um chamado do banco de dados pelo id
 func (repositorio Posts) BuscarPorID(ID uint64) (modelos.Post, error) {
 
 	linhas, erro := repositorio.db.Query(
@@ -157,7 +151,6 @@ func (repositorio Posts) BuscaPorNome(nomeDoc string) ([]modelos.Post, error) {
 	return Posts, nil
 }
 
-// Buscar traz todas as publicações
 func (repositorio Posts) BuscarTodos(urlCategoria string, urlCliente string) ([]modelos.Post, error) {
 
 	urlCategoria = fmt.Sprintf("%s", urlCategoria) // filtra por parametro na url ?categoria=[id]
@@ -247,7 +240,6 @@ func (repositorio Posts) Busca(urlBusca string) ([]modelos.Post, error) {
 	return Posts, nil
 }
 
-// Buscar traz todas as publicações
 func (repositorio Posts) BuscarPorString(urlCategoria string, urlCliente string) ([]modelos.Post, error) {
 
 	urlCategoria = fmt.Sprintf("%s", urlCategoria) // filtra por parametro na url ?categoria=[id]
@@ -293,7 +285,6 @@ func (repositorio Posts) BuscarPorString(urlCategoria string, urlCliente string)
 
 }
 
-// Buscar traz todas as publicações
 func (repositorio Posts) BuscarPorStringCat(urlCategoria string, urlCliente string) ([]modelos.Post, error) {
 
 	urlCategoria = fmt.Sprintf("%s", urlCategoria) // filtra por parametro na url ?categoria=[id]
@@ -339,7 +330,6 @@ func (repositorio Posts) BuscarPorStringCat(urlCategoria string, urlCliente stri
 
 }
 
-// Buscar traz todas as publicações
 func (repositorio Posts) BuscarPorStringSubCat(urlSubCategoria string, urlCliente string) ([]modelos.Post, error) {
 
 	urlSubCategoria = fmt.Sprintf("%s", urlSubCategoria) // filtra por parametro na url ?categoria=[id]

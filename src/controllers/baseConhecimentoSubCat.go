@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CriarCategoriaBase adiciona uma nova categoria no banco de dados
+// CriarSubCategoriaBase adiciona uma nova sub-categoria no banco de dados
 func CriarSubCategoriaBase(w http.ResponseWriter, r *http.Request) {
 
 	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
@@ -49,7 +49,7 @@ func CriarSubCategoriaBase(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusCreated, cat)
 }
 
-// AtualizarCategoria altera os dados de uma categoria
+// AtualizarSubCategoria altera os dados de uma categoria
 func AtualizarSubCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	catID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
@@ -89,7 +89,7 @@ func AtualizarSubCategoria(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// DeletarCategoria exclui uma categoria
+// DeletarSubCategoria exclui uma categoria
 func DeletarSubCategoria(w http.ResponseWriter, r *http.Request) {
 
 	parametros := mux.Vars(r)
@@ -118,7 +118,7 @@ func DeletarSubCategoria(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusNoContent, nil)
 }
 
-// BuscarTodasCategorias traz todas as categorias armazenadas no banco de dados
+// BuscarTodasSubCategorias traz todas as categorias armazenadas no banco de dados
 func BuscarTodasSubCategorias(w http.ResponseWriter, r *http.Request) {
 
 	db, erro := banco.Conectar()
@@ -139,7 +139,7 @@ func BuscarTodasSubCategorias(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarCategoria traz uma categoria armazenadas no banco de dados
+// BuscarSubCategoria traz uma categoria armazenadas no banco de dados
 func BuscarSubCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["catId"], 10, 64)
@@ -166,7 +166,7 @@ func BuscarSubCategoria(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// BuscarCategoria traz uma categoria armazenadas no banco de dados
+// BuscarSubCategoriaPorCategoria traz uma sub-categoria armazenada no banco de dados
 func BuscarSubCategoriaPorCategoria(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	ID, erro := strconv.ParseUint(parametros["catId"], 10, 64)

@@ -5,17 +5,14 @@ import (
 	"database/sql"
 )
 
-// Sessions representa um repositório de sessões
 type Sessions struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeSessions inicia um repositório de Sessions
 func NovoRepositorioDeSessions(db *sql.DB) *Sessions {
 	return &Sessions{db}
 }
 
-// BuscarPorID retorna os dados de uma sessão armazenada no banco de dados filtrando pelo id do usuário
 func (repositorio Sessions) BuscarPorID(ID uint64) (modelos.Session, error) {
 
 	linhas, erro := repositorio.db.Query(
@@ -41,7 +38,6 @@ func (repositorio Sessions) BuscarPorID(ID uint64) (modelos.Session, error) {
 	return session, nil
 }
 
-//SessionCreate insere um novo registro de sessão no banco ao receber o login
 func (repositorio Sessions) SessionCreate(session modelos.Session) (uint64, error) {
 	statment, erro := repositorio.db.Prepare(
 		"INSERT INTO SESSIONS(ID_USUARIO, TOKEN, DATA) VALUES(?, ?, ?)",
@@ -64,7 +60,6 @@ func (repositorio Sessions) SessionCreate(session modelos.Session) (uint64, erro
 
 }
 
-// DeletarSession exclui uma sessão do banco de dados
 func (repositorio Sessions) DeletarSession(ID uint64) error {
 	statement, erro := repositorio.db.Prepare("DELETE FROM SESSIONS WHERE ID = ?")
 	if erro != nil {
@@ -79,7 +74,6 @@ func (repositorio Sessions) DeletarSession(ID uint64) error {
 	return nil
 }
 
-// CronDeletarSessionApos12Horas deleta os registros que estão no banco há mais de 12 horas
 func (repositorio Sessions) CronDeletarSessionApos12Horas() error {
 
 	statement, erro := repositorio.db.Prepare("DELETE FROM SESSIONS WHERE DATA < (NOW() - INTERVAL 12 HOUR)")
@@ -95,7 +89,6 @@ func (repositorio Sessions) CronDeletarSessionApos12Horas() error {
 	return nil
 }
 
-// DeletarSession exclui uma sessão do banco de dados filtrando pelo id do usuário
 func (repositorio Sessions) DeletarSessionByUserID(ID_USUARIO uint64) error {
 	statement, erro := repositorio.db.Prepare("DELETE FROM SESSIONS WHERE ID_USUARIO = ?")
 	if erro != nil {

@@ -6,17 +6,14 @@ import (
 	"fmt"
 )
 
-// Usuarios representa um repositório de usuarios
 type Usuarios struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeUsuarios inicia um repositório de usuários
 func NovoRepositorioDeUsuarios(db *sql.DB) *Usuarios {
 	return &Usuarios{db}
 }
 
-// Criar insere um novo usuário no banco de dados
 func (repositorio Usuarios) CriarUsuario(usuario modelos.Usuario) (uint64, error) {
 	statement, erro := repositorio.db.Prepare(
 		"INSERT INTO USUARIOS(NOME, LOGIN_NT, RE, CARGO, EMAIL, SENHA, V_USUARIOS, V_BDC_POSTS, V_BDC_ADM, V_IMDB, V_GSA, V_MAPA_OPERACIONAL, V_MAPA_OPERACIONAL_ADM, ID_SITE, STATUS) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -41,7 +38,6 @@ func (repositorio Usuarios) CriarUsuario(usuario modelos.Usuario) (uint64, error
 
 }
 
-// Buscar traz todos os usuários que atendem um filtro de nome ou login
 func (repositorio Usuarios) Buscar(nomeOuLogin string) ([]modelos.Usuario, error) {
 
 	//filtro nome ou login
@@ -88,7 +84,6 @@ func (repositorio Usuarios) Buscar(nomeOuLogin string) ([]modelos.Usuario, error
 	return usuarios, nil
 }
 
-// BuscarPorID traz um usuário do banco de dados filtrado pelo id
 func (repositorio Usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 	linhas, erro := repositorio.db.Query(
 		"SELECT U.IDUSUARIO, U.NOME, U.RE, U.LOGIN_NT, U.CARGO, U.EMAIL, U.V_USUARIOS, U.V_BDC_POSTS, U.V_BDC_ADM, U.V_IMDB, U.V_GSA, U.V_MAPA_OPERACIONAL, U.V_MAPA_OPERACIONAL_ADM, U.ID_SITE, U.STATUS, S.IDSITE, S.NOME FROM USUARIOS U INNER JOIN SITES S ON S.IDSITE = U.ID_SITE WHERE U.IDUSUARIO = ?", ID)
@@ -126,7 +121,6 @@ func (repositorio Usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 	return usuario, nil
 }
 
-// Atualizar altera as informações de um usuário no banco de dados
 func (repositorio Usuarios) Atualizar(ID uint64, usuario modelos.Usuario) error {
 	statement, erro := repositorio.db.Prepare(
 		"UPDATE USUARIOS SET NOME = ?, RE = ?, LOGIN_NT = ?, CARGO = ?, EMAIL = ?, V_USUARIOS = ?, V_BDC_POSTS = ?, V_BDC_ADM = ?, V_IMDB = ?, V_GSA = ?, V_MAPA_OPERACIONAL = ?, V_MAPA_OPERACIONAL_ADM = ?, ID_SITE = ?, STATUS = ? WHERE IDUSUARIO = ?",
@@ -143,7 +137,6 @@ func (repositorio Usuarios) Atualizar(ID uint64, usuario modelos.Usuario) error 
 	return nil
 }
 
-// Deletar exclui o usuário do banco de dados
 func (repositorio Usuarios) Deletar(ID uint64) error {
 	statement, erro := repositorio.db.Prepare("DELETE FROM USUARIOS WHERE IDUSUARIO = ?")
 	if erro != nil {
@@ -158,7 +151,6 @@ func (repositorio Usuarios) Deletar(ID uint64) error {
 	return nil
 }
 
-// BuscarPorEmail busca um usuário por email e retorna o seu id e senha com hash
 func (repositorio Usuarios) BuscarPorEmail(email string) (modelos.Usuario, error) {
 	linha, erro := repositorio.db.Query("SELECT U.IDUSUARIO, U.LOGIN_NT, U.NOME, U.CARGO, U.EMAIL, U.V_USUARIOS, U.V_BDC_POSTS, U.V_BDC_ADM, U.V_IMDB, U.V_GSA, U.V_MAPA_OPERACIONAL, U.V_MAPA_OPERACIONAL_ADM, U.STATUS, S.IDSITE, S.NOME, U.SENHA FROM USUARIOS U INNER JOIN SITES S ON S.IDSITE = U.ID_SITE = U.IDUSUARIO WHERE EMAIL = ?", email)
 	if erro != nil {
@@ -178,7 +170,6 @@ func (repositorio Usuarios) BuscarPorEmail(email string) (modelos.Usuario, error
 
 }
 
-// BuscarPorLogin busca um usuário pelo Login
 func (repositorio Usuarios) BuscarPorLogin(LOGIN_NT string) (modelos.Usuario, error) {
 	linha, erro := repositorio.db.Query("SELECT U.IDUSUARIO, U.LOGIN_NT, U.RE, U.NOME, U.CARGO, U.EMAIL, U.V_USUARIOS, U.V_BDC_POSTS, U.V_BDC_ADM, U.V_IMDB, U.V_GSA, U.V_MAPA_OPERACIONAL, U.V_MAPA_OPERACIONAL_ADM, U.STATUS, S.IDSITE, S.NOME, U.SENHA FROM USUARIOS U INNER JOIN SITES S ON S.IDSITE = U.ID_SITE WHERE U.LOGIN_NT = ?", LOGIN_NT)
 	if erro != nil {
@@ -198,7 +189,6 @@ func (repositorio Usuarios) BuscarPorLogin(LOGIN_NT string) (modelos.Usuario, er
 
 }
 
-// BuscarSenha traz a senha de um usuário pelo ID
 func (repositorio Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
 	linha, erro := repositorio.db.Query("SELECT SENHA FROM USUARIOS WHERE IDUSUARIO = ?", usuarioID)
 	if erro != nil {
@@ -217,7 +207,6 @@ func (repositorio Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
 	return usuario.SENHA, nil
 }
 
-// AtualizarSenha altera a senha de um usuário
 func (repositorio Usuarios) AtualizarSenha(usuarioID uint64, senha string) error {
 	statement, erro := repositorio.db.Prepare("UPDATE USUARIOS SET SENHA = ?, STATUS = 'ATIVO' WHERE IDUSUARIO = ?")
 	if erro != nil {

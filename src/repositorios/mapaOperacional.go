@@ -8,17 +8,14 @@ import (
 	"strconv"
 )
 
-// MapasOperacional representa um repositório de MapaOperacional
 type MapasOperacional struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeMapasOperacional inicia o repositório de MapaOperacional
 func NovoRepositorioDeMapasOperacional(db *sql.DB) *MapasOperacional {
 	return &MapasOperacional{db}
 }
 
-// CriarDadosMapa insere uma nova operação no banco de dados
 func (repositorio MapasOperacional) CriarDadosMapa(mapa modelos.MapaOperacional) (uint64, error) {
 
 	statement, erro := repositorio.db.Prepare(

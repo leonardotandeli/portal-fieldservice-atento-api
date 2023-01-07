@@ -5,17 +5,14 @@ import (
 	"database/sql"
 )
 
-// Categorias representa um repositório de categorias
 type SubCategorias struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeCategorias cria um repositório de categorias
 func NovoRepositorioDeSubCategorias(db *sql.DB) *SubCategorias {
 	return &SubCategorias{db}
 }
 
-// CriarCategoria insere uma categoria no banco de dados
 func (repositorio SubCategorias) CriarSubCategoria(cat modelos.Post_SubCategoria) (uint64, error) {
 	statement, erro := repositorio.db.Prepare(
 		"INSERT INTO BDC_SUBCATEGORIAS(NOME, ID_CATEGORIA) VALUES (?,?)",
@@ -38,7 +35,6 @@ func (repositorio SubCategorias) CriarSubCategoria(cat modelos.Post_SubCategoria
 	return uint64(ultimoIDInserido), nil
 }
 
-// Atualizar altera os dados de uma categoria no banco de dados
 func (repositorio SubCategorias) AtualizarSubCategoria(catID uint64, cat modelos.Post_SubCategoria) error {
 	statement, erro := repositorio.db.Prepare("UPDATE BDC_SUBCATEGORIAS SET NOME = ?, ID_CATEGORIA = ? WHERE IDSUBCATEGORIA = ?")
 	if erro != nil {
@@ -53,7 +49,6 @@ func (repositorio SubCategorias) AtualizarSubCategoria(catID uint64, cat modelos
 	return nil
 }
 
-// Deletar exclui uma Categoria do banco de dados
 func (repositorio SubCategorias) DeletarSubCategoria(catID uint64) error {
 	statement, erro := repositorio.db.Prepare("UPDATE BDC_SUBCATEGORIAS SET STATUS = ? WHERE IDSUBCATEGORIA = ?")
 	if erro != nil {
@@ -70,7 +65,6 @@ func (repositorio SubCategorias) DeletarSubCategoria(catID uint64) error {
 	return nil
 }
 
-// BuscarCategoria traz todas as categorias do banco de dados
 func (repositorio SubCategorias) BuscarSubCategoria() ([]modelos.Post_SubCategoria, error) {
 
 	linhas, erro := repositorio.db.Query(
@@ -103,7 +97,6 @@ func (repositorio SubCategorias) BuscarSubCategoria() ([]modelos.Post_SubCategor
 
 }
 
-// BuscarPorID busca um chamado do banco de dados pelo id
 func (repositorio SubCategorias) BuscarSubCategoriaPorID(ID uint64) (modelos.Post_SubCategoria, error) {
 
 	linhas, erro := repositorio.db.Query(
@@ -130,7 +123,6 @@ func (repositorio SubCategorias) BuscarSubCategoriaPorID(ID uint64) (modelos.Pos
 
 }
 
-// BuscarPorID busca um chamado do banco de dados pelo id
 func (repositorio SubCategorias) BuscarSubCategoriaPorCategoria(ID uint64) ([]modelos.Post_SubCategoria, error) {
 
 	linhas, erro := repositorio.db.Query(

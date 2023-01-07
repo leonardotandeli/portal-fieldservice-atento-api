@@ -12,7 +12,7 @@ type Post_Categoria struct {
 	STATUS      string `json:"status,omitempty"`
 }
 
-// Post_Categoria representa uma categoria de posts cadastrado em sistema
+// Post_SubCategoria representa uma sub-categoria de posts cadastrado em sistema
 type Post_SubCategoria struct {
 	IDSUBCATEGORIA uint64 `json:"idsubcategoria,omitempty"`
 	NOME           string `json:"NOME,omitempty"`

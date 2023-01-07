@@ -5,17 +5,14 @@ import (
 	"database/sql"
 )
 
-// Dacs representa um repositório de Dacs
 type Dacs struct {
 	db *sql.DB
 }
 
-// NovoRepositorioDeDacs inicia o repositório de Dacs
 func NovoRepositorioDeDacs(db *sql.DB) *Dacs {
 	return &Dacs{db}
 }
 
-// BuscarDacs traz todos os dacs do banco de dados
 func (repositorio Dacs) BuscarDacs() ([]modelos.Dac, error) {
 
 	linhas, erro := repositorio.db.Query(
