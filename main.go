@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/src/banco"
 	"api/src/config"
 	"api/src/cron"
 	"api/src/router"
@@ -29,6 +30,9 @@ func main() {
 
 	// carrega variaveis de ambiente
 	config.Carregar()
+
+	// inicia conexão com o banco via ORM
+	banco.ConectarComORM()
 
 	// gera as rotas http
 	r := router.Gerar()
